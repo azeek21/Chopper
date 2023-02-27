@@ -34,7 +34,7 @@ html {
 *::after {
   box-sizing: border-box;
   scroll-behavior: smooth;
-
+  transition: 200ms ease-in-out;
 }
 
 html {
@@ -128,4 +128,69 @@ select {
     scroll-behavior: auto !important;
   }
 }
+
+section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+// Loader styles
+.loader {
+  position: relative;
+  padding: var(--padding-small);
+  min-width: min-content;
+}
+
+.loader::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  animation: loading ease-in-out 2s infinite;
+  background-image: linear-gradient(90deg, rgba(255,255,255,0.0), rgba(0,0,0,0.5), rgba(255,255,255,0.0));
+  backdrop-filter: blur(0.1rem);
+  box-shadow:  ${({theme}) => theme.shadow.primary};
+  background-size: 30%;
+  background-repeat: no-repeat;
+  border-radius: 0.5rem;
+}
+@keyframes loading{
+  0% {
+    background-position: -50%;
+  }
+  100% {
+    background-position: 150%;
+  }
+}
+
+.label {
+  position: absolute;
+  top: 50%;
+  left: var(--padding-normal);
+  transform: translateY(-50%);
+  line-height: 1rem;
+  font-size: var(--fs-normal);
+  cursor: text;
+  transition: 200ms ease-in-out;
+}
+
+#urlinput:focus ~ .label{
+  transform: none;
+  top: var(--padding-small);
+  left: var(--padding-small);
+  font-size: var(--fs-sm);
+}
+
+input:not(:placeholder-shown) ~ .label{
+  transform: none;
+  top: var(--padding-small);
+  left: var(--padding-small);
+  font-size: var(--fs-sm);
+};
+
+
 `

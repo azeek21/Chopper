@@ -1,10 +1,15 @@
+import CreationForm from "@/components/creation-form"
 import { THEME_TYPE } from "@/styles/theme/theme"
 import styled from "styled-components"
 
 export default function Index() {
 
     return (
+        <>
         <Title>Hello this is my Template Index Home</Title>
+        <CreationForm />
+        </>
+
     )
 }
 
