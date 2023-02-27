@@ -11,9 +11,6 @@ type CreateUrlOptions = {
 }
 
 export default async function CreateUrl(onwer: string, to_url: string, options?: CreateUrlOptions): Promise<HydratedDocument<URL_DATA_INTERFACE>> {
-
-    await mongoClient();
-
     return new UrlModel<URL_DATA_INTERFACE>({
         from_url: randomUUID(),
         to_url: to_url,

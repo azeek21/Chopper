@@ -11,7 +11,6 @@ export interface URL_DATA_INTERFACE {
     timeout?: number,
 }
 
-
 const URL_DATA_SCHEMA = new Schema<URL_DATA_INTERFACE>({
     from_url: {type: String,required: true},
     to_url: {type: String, required: true},
