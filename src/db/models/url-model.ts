@@ -26,3 +26,4 @@ const URL_DATA_SCHEMA = new Schema<URL_DATA_INTERFACE>({
 const UrlModel = models.UrlModel || model<URL_DATA_INTERFACE>("redirections", URL_DATA_SCHEMA)
 
 export default UrlModel;
+
