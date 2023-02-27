@@ -13,7 +13,7 @@ const createUrlData = (from_url: string, owner: string): Url_Data_Type => {
         clicks: 0,
         owner: newID(),
     }
-} 
+}
 
 const Url_Data = {
     name: "UrlSchema",
