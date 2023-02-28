@@ -22,7 +22,7 @@ const URL_DATA_SCHEMA = new Schema<URL_DATA_INTERFACE>({
     timeout: Number,
 })
 
-const UrlModel = models.UrlModel || model<URL_DATA_INTERFACE>("redirections", URL_DATA_SCHEMA)
+const UrlModel = models.redirections || model<URL_DATA_INTERFACE>("redirections", URL_DATA_SCHEMA)
 
 export default UrlModel;
 

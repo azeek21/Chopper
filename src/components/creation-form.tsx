@@ -19,7 +19,7 @@ export default function CreationForm() {
         }
         setLoading(true);
         const res = await (await fetch('/api/urls/create', {method: "POST", body: JSON.stringify({to_url: url})})).json()
-        console.log(res.data.to_url);
+        console.log(res.data);
         setLoading(false)
     }
 

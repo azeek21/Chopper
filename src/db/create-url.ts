@@ -3,6 +3,7 @@ import { URL_DATA_INTERFACE } from "./models/url-model";
 import { HydratedDocument } from "mongoose";
 import { randomUUID } from "crypto";
 import mongoClient from "./connect";
+import newFromUrl from "@/utils/new-from-url";
 
 type CreateUrlOptions = {
     password?: string,
@@ -11,8 +12,11 @@ type CreateUrlOptions = {
 }
 
 export default async function CreateUrl(onwer: string, to_url: string, options?: CreateUrlOptions): Promise<HydratedDocument<URL_DATA_INTERFACE>> {
+    const last = await UrlModel.findOne<URL_DATA_INTERFACE>().sort({created_at: "desc"}).exec();
+    const from_url = newFromUrl(last?.from_url || "");
+
     return new UrlModel<URL_DATA_INTERFACE>({
-        from_url: randomUUID(),
+        from_url: from_url,
         to_url: to_url,
         owner: onwer,
         created_at: Date.now(),
