@@ -8,14 +8,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 
     if (method == "POST") {
-        const data = JSON.parse(req.body);
-        if (!data.to_url) {
-            return res.status(400).json({error: "Missing to_url!"})
-        };
-        await mongoClient();
-        const url = await CreateUrl(randomUUID(), data. to_url);
-        await url.save();
-        return res.status(201).json({status: "Sucess", data: url.toJSON()})
+        setTimeout(async () => {
+
+            const data = JSON.parse(req.body);
+            if (!data.to_url) {
+                return res.status(400).json({error: "Missing to_url!"})
+            };
+            await mongoClient();
+            const url = await CreateUrl(randomUUID(), data.to_url);
+            await url.save();
+            res.status(201).json({status: "Sucess", data: url.toJSON()})
+
+        }, 5000)
+        return 
     }
 
     res.status(400).json({err: "BAD"})

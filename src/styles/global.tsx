@@ -6,6 +6,12 @@ html {
     scroll-behavior: smooth;
 }
 
+::selection {
+  background-color: ${({theme}) => theme.textColor.purple};
+  /* background-color: ${({theme}) => theme.backgroundColor.pink}; */
+  color: white;
+}
+
 :root{
   /* paddings */
   --padding-gigant: 1.5rem;
@@ -51,12 +57,14 @@ position: relative;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   font-size: 1rem;
   color: ${({ theme }) => theme.textColor.primary};
-  background-color: ${({ theme }) => theme.backgrounColor.primary};
+  background-color: ${({ theme }) => theme.backgroundColor.primary};
   line-height: 1;
   transition: 0.3s linear;
   // expreimental
-  backdrop-filter: blur(1rem);
-  background-image: repeating-linear-gradient(45deg, white, rgba(0, 0, 0, 0.4), white, rgba(0, 0, 0, 0.7));
+  backdrop-filter: blur(1px);
+  background-image:  url("/top-right.svg");
+  background-repeat: no-repeat;
+  background-position: top right;
   
 }
 
@@ -151,38 +159,41 @@ section {
   bottom: 0;
   z-index: 1;
   animation: loading ease-in-out 2s infinite;
-  background-image: linear-gradient(90deg, rgba(255,255,255,0.0), rgba(0,0,0,0.5), rgba(255,255,255,0.0));
+  background-image: linear-gradient(90deg, rgba(255,255,255,0.0), rgba(128, 0, 128, 0.7), rgba(255,255,255,0.0));
   backdrop-filter: blur(0.1rem);
   box-shadow:  ${({theme}) => theme.shadow.primary};
-  background-size: 30%;
+  background-size: 50%;
   background-repeat: no-repeat;
   border-radius: 0.5rem;
 }
+
 @keyframes loading{
   0% {
-    background-position: -50%;
+    background-position: -100%;
   }
   100% {
-    background-position: 150%;
+    background-position: 250%;
   }
 }
 
 .label {
   position: absolute;
   top: 50%;
-  left: var(--padding-normal);
+  left: var(--padding-gigant);
   transform: translateY(-50%);
   line-height: 1rem;
   font-size: var(--fs-normal);
   cursor: text;
+  color: ${({theme})=> theme.textColor.secondary};
   transition: 200ms ease-in-out;
 }
 
-#urlinput:focus ~ .label{
+input:focus ~ .label{
   transform: none;
   top: var(--padding-small);
   left: var(--padding-small);
   font-size: var(--fs-sm);
+  color: ${({theme})=> theme.textColor.primary};
 }
 
 input:not(:placeholder-shown) ~ .label{
@@ -190,6 +201,7 @@ input:not(:placeholder-shown) ~ .label{
   top: var(--padding-small);
   left: var(--padding-small);
   font-size: var(--fs-sm);
+  color: ${({theme})=> theme.textColor.primary};
 };
 
 
