@@ -5,30 +5,15 @@ import { Link } from '@mui/icons-material';
 import Title from "@/components/title";
 import { useEffect, useState } from "react";
 import typeWriter from "@/utils/typewriter";
+import Cookie from "@/components/cookie-popup";
 
 export default function Index() {
-    const [uid, setUid] = useState('')
+    const [user, setUser] = useState('')
 
     useEffect(() => {
           setTimeout(() => {
             typeWriter();
           }, 1000);
-
-          if (!uid) {
-            const createuser = async () => {
-                const olduid = localStorage.getItem('uid');
-                if (olduid) {
-                    setUid(olduid);
-                    return ;
-                } else {
-                    const resp = await (await (fetch('/api/new-user'))).json();
-                    const newuid = resp.uid || "";
-                    localStorage.setItem("uid", newuid);
-                    setUid(newuid);
-                }
-            }
-            createuser();
-          }
     }, [])
 
     return (
@@ -38,7 +23,7 @@ export default function Index() {
             </RoundButton>
             <HomeTitle>
                 A SIMPLE LINK BUT A POWERFUL TOOL FOR 
-                <Nefor id="demo">
+                <div></div><Nefor id="demo">
                     Everyone ?
                 </Nefor>
             </HomeTitle>
@@ -54,15 +39,17 @@ const HomeTitle = styled(Title)`
     font-size: var(--fs-4xl);
     line-height: normal;
     color: ${ ({theme}) => theme.textColor.primary};
-    text-shadow: ${ ({theme}) => theme.shadow.pink};
+    max-width:80%;
 `
 
 const Nefor = styled.span`
-    padding-left: 1rem;
+    display: block;
     background-image: linear-gradient(90deg, #810094, #fb457f);
     background-clip: text;
     -webkit-background-clip:text;
     -webkit-text-fill-color: transparent;
+    transition: 300ms ease-in-out;
+    min-height: 100%;
 `
 
 const HomeText = styled.p`
@@ -70,10 +57,11 @@ const HomeText = styled.p`
     color: ${ ({theme}) => theme.textColor.secondary };   
     line-height: normal;    
     letter-spacing: 0.05rem;
+    max-width: 79%;
 `
 
 const StyledHome = styled.section`
-    margin: 8rem auto auto 2rem;
+    margin: 5rem auto auto 2rem;
     display: flex;
     align-items: flex-start;
     justify-content: center;
@@ -82,6 +70,7 @@ const StyledHome = styled.section`
 `
 
 const RoundButton = styled(Button)`
+    border: none;
     transform: rotateZ(-45deg);
     border-radius: 50%;
     aspect-ratio: 1;

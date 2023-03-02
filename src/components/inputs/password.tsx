@@ -24,7 +24,7 @@ export default function PasswordField(props: any) {
       />
     <label className="label" htmlFor="password"> Password </label>
 
-      <Button className="eye" onClick={() => {setVisible(!visible)}}>👁</Button>
+      <span className="eye" onClick={() => {setVisible(!visible)}}>👁</span>
     </StyledPasswordField>
   );
 }
@@ -33,6 +33,9 @@ const StyledPasswordField = styled(Input)`
   position: relative;
   padding: 0;
   border: none;
+  &:hover{
+    border: none;
+  }
   & .eye {
     position: absolute;
     top: 50%;

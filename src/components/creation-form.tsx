@@ -1,7 +1,7 @@
 import styled from "styled-components"
 import Input from "./input"
 import Button from "./button"
-import { ChangeEvent, useState } from "react"
+import { ChangeEvent, useEffect, useState } from "react"
 import LoadingOverlay from "./loading-overlay";
 import PasswordField from "./inputs/password";
 import { Link } from "@mui/icons-material";
@@ -53,7 +53,7 @@ export default function CreationForm() {
 
         }
         setLoading(true);
-        const res = await (await fetch('/api/urls/create', {method: "POST", body: JSON.stringify(form)})).json()
+        const res = await (await fetch('/api/urls/create', {method: "POST", body: JSON.stringify(form)})).json();
         console.log(res.data);
         setLoading(false)
     }
@@ -61,7 +61,7 @@ export default function CreationForm() {
     return (
         <div style={{
             display: 'flex',
-            width: "50%",
+            width: "60%",
             marginTop: "2rem",
             marginBottom: "2rem"
         }}>
@@ -79,19 +79,19 @@ export default function CreationForm() {
             </RotatedLink>
                 <label className="label" htmlFor="urlinput" >Url: https://example.com/your-site </label>
             <LoadingOverlay style={{position: "absolute", top: '50%', right: '0', transform: "translate(50%, -50%)"}} loading={loading}>
-                <CreateButton>
+                <CreateButton active={true}>
                     CREATE
                 </CreateButton>
             </LoadingOverlay>
             </FormItemWrapper>
-            {/* <Button onClick={(ev) => {
+            <Button onClick={(ev) => {
                 setExpanded(old => !old)}}
                 type={"button"}
                 style={{alignSelf: "center"}}
                 >
                 Open
-            </Button> */}
-            {/* { expanded &&
+            </Button>
+            { expanded &&
                 <>
                <PasswordField value={form.password} clickHandler={changeHandler} />
                <FormItemWrapper>
@@ -99,8 +99,9 @@ export default function CreationForm() {
                <label className="label" htmlFor="limit"> First N people can use this link </label>
                </FormItemWrapper>
                </>
-            } */}
+            }
             </StyledCreationForm>
+
         </div>       
     )
 }
@@ -121,20 +122,24 @@ const FormItemWrapper = styled.div`
 width: 100%;
     position: relative;
     display: flex;
-    align-items: center;
-    justify-content: center;
     min-width: max-content;
     min-height: max-content;
 `
 
 const CreateButton = styled(Button)`
-    background-image: linear-gradient(45deg, ${ ({theme}) => theme.backgroundColor.purple}, ${ ({theme}) => theme.backgroundColor.pink});
-    padding: var(--padding-normal);
+    padding: var(--padding-big);
+    font-size: var(--fs-normal);
     border-radius: 5rem;
     box-shadow: ${({theme}) => theme.shadow.primary};
     color: white;
     font-weight: bold;
+    border: none;
+    &:hover{
+        text-shadow: 0.03rem 0.03rem 0.3rem whitesmoke;
+        box-shadow: ${({theme}) => theme.shadow.primary};
+    }
 `
+
 const RotatedLink = styled.span`
     position: absolute;
     left: 0.08rem;
@@ -152,4 +157,14 @@ const UrlInput = styled(Input)`
     box-shadow: ${({theme}) => theme.shadow.primary};
     color: purple;
     font-weight: 500;
+
+    &:not(:placeholder-shown) ~ div {
+        transform: translate(110%, -50%);
+    }
+    &:focus ~ span {
+    transform: translateY(0) rotateZ(-45deg); 
+    }
+    &:not(:placeholder-shown) ~ span {
+        transform: translateY(0) rotateZ(-45deg);
+    }
 `

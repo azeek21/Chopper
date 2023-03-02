@@ -48,7 +48,7 @@ html {
 }
 
 body {
-position: relative;
+  position: relative;
   margin: 0;
   padding: 0px;
   overflow-x: hidden;
@@ -61,11 +61,10 @@ position: relative;
   line-height: 1;
   transition: 0.3s linear;
   // expreimental
-  backdrop-filter: blur(1px);
   background-image:  url("/top-right.svg");
   background-repeat: no-repeat;
   background-position: top right;
-  
+  background-size: 50%;
 }
 
 h1,

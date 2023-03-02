@@ -1,11 +1,13 @@
 import { Schema, model, models } from "mongoose";
 import { URL_DATA_INTERFACE } from "./url-model";
 
-interface USER_INTERFACE {
+export interface USER_INTERFACE {
     uid: string,
+    registered: boolean,
+    urls: string[],
+    secret?: string,
     name?: string,
     email?: string,
-    urls?: string[],
 }
 
 const UserSchema = new Schema<USER_INTERFACE>({
@@ -13,9 +15,17 @@ const UserSchema = new Schema<USER_INTERFACE>({
         type: String,
         required: true
     },
+    registered: {
+        type: Boolean,
+        required: true,
+    },
+    secret: String,
     name: String,
     email: String,
-    urls: Array<string>,
+    urls: {
+        type: Array<String>,
+        required: true,
+    },  
 })
 
 const UserModel = models.myuser || model<USER_INTERFACE>('myuser', UserSchema);

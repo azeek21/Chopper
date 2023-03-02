@@ -13,6 +13,11 @@ export default function Header() {
 }
 
 const StyledHeader = styled.header`
+    position: fixed;
+    z-index: 9999;
+    top: 0;
+    left: 0;
+    right: 0;
     /* background-color: ${({theme}) => theme.backgroundColor.primary}; */
     color: ${({theme}) => theme.textColor.primary};
     padding: var(--padding-big);
@@ -20,4 +25,5 @@ const StyledHeader = styled.header`
     display: flex;
     align-items: center;
     justify-content: space-between;
+    backdrop-filter: blur(4px);
 `

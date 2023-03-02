@@ -1,11 +1,12 @@
 export default async function typeWriter() {
     const doc: any = document.getElementById("demo");
     let txt = [
-      "YOU !",
-      "YOUTUBERS !",
-      "MARKETOLOGS !",
-      "POLITICANS !",
-      "EVERYONE !",
+      "YOU ❤️!",
+      "YOUTUBERS 📺!",
+      "MARKETOLOGS 🛍!",
+      "POLITICANS ⚖️!",
+      "SCIENTISTS 🔬!",
+      "EVERYONE ❄️!",
     ];
     let speed = 100;
     (async () => {
