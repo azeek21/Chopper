@@ -3,8 +3,7 @@ import Input from "./input"
 import Button from "./button"
 import { ChangeEvent, useContext, useEffect, useState } from "react"
 import LoadingOverlay from "./loading-overlay";
-import PasswordField from "./inputs/password";
-import { Link } from "@mui/icons-material";
+import { Link, Key, Visibility, VisibilityOff, LinkOff, ManageHistory, Groups } from "@mui/icons-material";
 import { getCookie } from "@/utils/cookie";
 import {ExpandLess, ExpandMore} from "@mui/icons-material";
 import { useDispatch } from "react-redux";
@@ -15,19 +14,19 @@ type FORM_TYPE = {
     to_url: string,
     limit: string,
     password: string,
-    timeout: number | null,
+    timeout: string,
 }
 
 const initialFormState = {
     to_url: "",
     limit: '',
     password: "",
-    timeout: null,
+    timeout: "",
 }
 
 export default function CreationForm() {
     const [form, setForm] = useState<FORM_TYPE>(initialFormState);
-
+    const [passwordVisible, setPasswordVisible] = useState(false);
     const dispatch = useDispatch();
     console.log("SSR -------------");
     
@@ -63,7 +62,7 @@ export default function CreationForm() {
                     break;
 
                 case "timeout":
-                    copy.timeout = parseInt(ev.target.value);
+                    copy.timeout = ev.target.value;
                     break;
             }
             return copy;
@@ -96,13 +95,14 @@ export default function CreationForm() {
             autoComplete="off"
             autoSave="off"
             >
+
             <FormItemWrapper>
-            <UrlInput id="urlinput" onChange={changeHandler} value={form?.to_url} name="url" disabled={loading} placeholder=" " required type={"url"} pattern="\S+" title="URLs can't include whitespaces" onInvalid={() => {}}  autoComplete="new-password"/>
-            <RotatedLink>
+            <UrlInput id="urlinput" onChange={changeHandler} value={form?.to_url} name="url" disabled={loading} placeholder=" " required type={"url"} pattern="\S+" title="Must be valid URL !" onInvalid={() => {}}  autoComplete="new-password"/>
+            <span>
                 <Link />
-            </RotatedLink>
+            </span>
                 <label className="label" htmlFor="urlinput" >Url: https://example.com/your-site </label>
-            <LoadingOverlay style={{position: "absolute", top: '50%', right: '0', transform: "translate(50%, -50%)"}} loading={loading}>
+            <LoadingOverlay loading={loading}>
                 <CreateButton active={true}>
                     CREATE
                 </CreateButton>
@@ -110,7 +110,7 @@ export default function CreationForm() {
             </FormItemWrapper>
 
             
-            { hasCookies &&
+            { (hasCookies && form.to_url.length > 0) &&
                 <Button type="button" onClick={() => {setExpanded(expanded => !expanded)}}>
                     {expanded ? <ExpandLess/> : <ExpandMore />}
                 </Button>
@@ -118,10 +118,43 @@ export default function CreationForm() {
 
             { expanded &&
                 <>
-               <PasswordField value={form.password} clickHandler={changeHandler} />
+                {/* PASSWORD INPUT */}
+                <FormItemWrapper>
+                <Input
+                    id="password"
+                    value={form.password || ""}
+                    name="password"
+                    placeholder=" "
+                    title="Any password, security is yours, who cares 🤷‍♂️"
+                    required={false}
+                    type={passwordVisible ? "text" : "password"}
+                    style={{paddingRight: "2rem"}}
+                    onChange={changeHandler}
+                    autoComplete="new-password"
+                />
+                <span> <Key /> </span>
+                <div onClick={() => {setPasswordVisible( visible => !visible)}}>
+                    <Button type="button">
+                    {passwordVisible ? <Visibility /> : <VisibilityOff />}
+                    </Button>
+                </div>
+                <label className="label" htmlFor="password"> Password </label> 
+                </FormItemWrapper>
+
+
+                {/* LIMIT INPUT */}
                <FormItemWrapper>
-               <Input id="limit" name="limit" value={form.limit || ""} onChange={changeHandler} placeholder=" " title="Limit must be numeric" pattern="^[0-9]*$"/>
+               <Input type={"number"} id="limit" name="limit" value={form.limit || ""} onChange={changeHandler} placeholder=" " title="Url will be disabled after being used for N times."/>
                <label className="label" htmlFor="limit"> First N people can use this link </label>
+               <span> <LinkOff /> </span>
+               </FormItemWrapper>
+
+
+                {/* TIMEOUT INPUT */}
+               <FormItemWrapper>
+               <Input type={"date"} id="timeout" name="timeout" value={form.timeout || ""} onChange={changeHandler} placeholder=" " title="Url will be disabled after this date."/>
+               <label className="label" htmlFor="timeout"> Disable after this date </label>
+               <span> <ManageHistory /> </span>
                </FormItemWrapper>
                </>
             }
@@ -141,7 +174,6 @@ width:100%;
     justify-content: flex-end;
     gap: var(--padding-big);
     border-radius: 0.5rem;
-    /* border: 0.1rem solid gray; */
 `
 
 const FormItemWrapper = styled.div`
@@ -150,6 +182,22 @@ width: 100%;
     display: flex;
     min-width: max-content;
     min-height: max-content;
+    & div {
+        position: absolute;
+        left: 100%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+    }
+    & span {
+        position: absolute;
+        left: 0.08rem;
+        top: var(--padding-gigant);
+        transform: translateY(-35%);
+        z-index: 9;
+        font-size: var(--fs-xsm);
+        color: ${ ({theme}) => theme.textColor.secondary}
+    }
+
 `
 
 const CreateButton = styled(Button)`
@@ -166,15 +214,6 @@ const CreateButton = styled(Button)`
     }
 `
 
-const RotatedLink = styled.span`
-    position: absolute;
-    left: 0.08rem;
-    top: var(--padding-gigant);
-    transform: translateY(-35%);
-    z-index: 9;
-    font-size: var(--fs-xsm);
-    color: ${ ({theme}) => theme.textColor.secondary}
-`
 
 const UrlInput = styled(Input)`
     padding-left: 2rem;
@@ -183,14 +222,4 @@ const UrlInput = styled(Input)`
     box-shadow: ${({theme}) => theme.shadow.primary};
     color: purple;
     font-weight: 500;
-
-    &:not(:placeholder-shown) ~ div {
-        transform: translate(110%, -50%);
-    }
-    &:focus ~ span {
-    transform: translateY(0) rotateZ(-45deg); 
-    }
-    &:not(:placeholder-shown) ~ span {
-        transform: translateY(0) rotateZ(-45deg);
-    }
 `
