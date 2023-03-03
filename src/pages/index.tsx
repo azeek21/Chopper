@@ -8,6 +8,7 @@ import typeWriter from "@/utils/typewriter";
 import Cookie from "@/components/cookie-popup";
 import { useSelector } from "react-redux";
 import { RootState } from "@/GlobalRedux/store";
+import UrlItem from "@/components/url-item";
 
 export default function Index() {
     const [user, setUser] = useState('')
@@ -17,9 +18,9 @@ export default function Index() {
     console.log("INDEX REDUX <<<");
     
     useEffect(() => {
-        //   setTimeout(() => {
-        //     typeWriter();
-        //   }, 1000);
+          setTimeout(() => {
+            typeWriter();
+          }, 1000);
     }, [])
 
     return (
@@ -29,34 +30,34 @@ export default function Index() {
             </RoundButton>
             <HomeTitle>
                 A SIMPLE LINK BUT A POWERFUL TOOL FOR 
-                <div></div><Nefor id="demo">
-                    Everyone ?
-                </Nefor>
             </HomeTitle>
+            <Nefor id="demo">
+                    Everyone ?
+            </Nefor>
             <HomeText>
-                Our tool allows you seamlessly track your links with simple and easy-to-remember yet powerfull links and provide your customers a unique toilered experinece
+                Our tool allows you seamlessly create and track your links with simple and easy-to-remember yet powerfull links and provide your customers a unique toilered experinece
             </HomeText>
         <CreationForm />
-        <p>{urls.urls.length}</p>
-        { urls.urls.length > 0 && urls.urls.map(url => <h5>{url.from_url}</h5>) }
+        { urls.urls.length > 0 && urls.urls.map(url => <UrlItem url={url} />) }
         </StyledHome>
     )
 }
 
 const HomeTitle = styled(Title)`
-    font-size: var(--fs-4xl);
+    font-size: var(--fs-3xl);
     line-height: normal;
     color: ${ ({theme}) => theme.textColor.primary};
     max-width:80%;
 `
 
-const Nefor = styled.span`
-    display: block;
+const Nefor = styled.div`
+    font-size: var(--fs-4xl);
+    font-weight: bold;
     background-image: linear-gradient(90deg, #810094, #fb457f);
     background-clip: text;
     -webkit-background-clip:text;
     -webkit-text-fill-color: transparent;
-    transition: 300ms ease-in-out;
+    transition: 300ms ease-out;
     min-height: 100%;
 `
 
@@ -65,7 +66,7 @@ const HomeText = styled.p`
     color: ${ ({theme}) => theme.textColor.secondary };   
     line-height: normal;    
     letter-spacing: 0.05rem;
-    max-width: 79%;
+    max-width: 60%;
 `
 
 const StyledHome = styled.section`

@@ -3,7 +3,7 @@ import Input from "./input"
 import Button from "./button"
 import { ChangeEvent, useContext, useEffect, useState } from "react"
 import LoadingOverlay from "./loading-overlay";
-import { Link, Key, Visibility, VisibilityOff, LinkOff, ManageHistory, Groups } from "@mui/icons-material";
+import { Link, Key, Visibility, VisibilityOff, LinkOff, ManageHistory, Update } from "@mui/icons-material";
 import { getCookie } from "@/utils/cookie";
 import {ExpandLess, ExpandMore} from "@mui/icons-material";
 import { useDispatch } from "react-redux";
@@ -110,7 +110,7 @@ export default function CreationForm() {
             </FormItemWrapper>
 
             
-            { (hasCookies && form.to_url.length > 0) &&
+            { (hasCookies && form.to_url.length > 0 || expanded) &&
                 <Button type="button" onClick={() => {setExpanded(expanded => !expanded)}}>
                     {expanded ? <ExpandLess/> : <ExpandMore />}
                 </Button>
@@ -154,7 +154,7 @@ export default function CreationForm() {
                <FormItemWrapper>
                <Input type={"date"} id="timeout" name="timeout" value={form.timeout || ""} onChange={changeHandler} placeholder=" " title="Url will be disabled after this date."/>
                <label className="label" htmlFor="timeout"> Disable after this date </label>
-               <span> <ManageHistory /> </span>
+               <span> <Update /> </span>
                </FormItemWrapper>
                </>
             }
@@ -176,7 +176,7 @@ width:100%;
     border-radius: 0.5rem;
 `
 
-const FormItemWrapper = styled.div`
+export const FormItemWrapper = styled.div`
 width: 100%;
     position: relative;
     display: flex;

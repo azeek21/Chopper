@@ -21,8 +21,11 @@ export const urlsSlice = createSlice({
         (url) => url.from_url == action.payload.from_url
       );
     },
+    updateUrl: (state, action) => {
+
+    }
   },
 });
 
-export const { addUrl, removeUrl } = urlsSlice.actions;
+export const { addUrl, removeUrl, updateUrl } = urlsSlice.actions;
 export default urlsSlice.reducer;

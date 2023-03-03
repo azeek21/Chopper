@@ -1,7 +1,7 @@
 export default async function typeWriter() {
     const doc: any = document.getElementById("demo");
     let txt = [
-      "YOU ❤️!",
+      "YOU ❤️",
       "YOUTUBERS 📺!",
       "MARKETOLOGS 🛍!",
       "POLITICANS ⚖️!",
@@ -13,7 +13,7 @@ export default async function typeWriter() {
       let i = 0;
       let f = 1;
       const me = setInterval(() => {
-        doc.innerText = "";
+        doc.innerText = "❤️";
         let ii = 0;
         const p = setInterval(() => {
           doc.innerText += txt[i][ii];
