@@ -19,10 +19,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const uid = serialize("weak-uid", user.uid, {
             path: '/',
             expires: date,
+            sameSite: true,
         });
         const secret = serialize("weak-secret", user.secret!, {
             path: '/',
             expires: date,
+            sameSite: true,
         });
 
         res.setHeader("Set-Cookie", [uid, secret]);

@@ -1,10 +1,15 @@
 import styled from "styled-components"
 import Input from "./input"
 import Button from "./button"
-import { ChangeEvent, useEffect, useState } from "react"
+import { ChangeEvent, useContext, useEffect, useState } from "react"
 import LoadingOverlay from "./loading-overlay";
 import PasswordField from "./inputs/password";
 import { Link } from "@mui/icons-material";
+import { getCookie } from "@/utils/cookie";
+import {ExpandLess, ExpandMore} from "@mui/icons-material";
+import { useDispatch } from "react-redux";
+import { addUrl } from "@/GlobalRedux/features/urls/urls-slice";
+
 
 type FORM_TYPE = {
     to_url: string,
@@ -13,16 +18,33 @@ type FORM_TYPE = {
     timeout: number | null,
 }
 
-export default function CreationForm() {
-    const [form, setForm] = useState<FORM_TYPE>({
-        to_url: "",
-        limit: '',
-        password: "",
-        timeout: null,
-    });
+const initialFormState = {
+    to_url: "",
+    limit: '',
+    password: "",
+    timeout: null,
+}
 
+export default function CreationForm() {
+    const [form, setForm] = useState<FORM_TYPE>(initialFormState);
+
+    const dispatch = useDispatch();
+    console.log("SSR -------------");
+    
     const [loading, setLoading] = useState(false);
     const [expanded, setExpanded] = useState(false);
+    const [hasCookies, setHasCookies] = useState(false);
+
+    useEffect( () => {
+        const x = () => {
+            const res = getCookie();
+            if (!res || res.noCookie) {
+                return false;
+            }
+            return true;
+        };
+        setHasCookies(x)
+    }, [])
 
     const changeHandler = (ev: ChangeEvent<HTMLInputElement>) => {
         setForm(oldForm => {
@@ -55,6 +77,8 @@ export default function CreationForm() {
         setLoading(true);
         const res = await (await fetch('/api/urls/create', {method: "POST", body: JSON.stringify(form)})).json();
         console.log(res.data);
+        dispatch(addUrl(res.data))
+        setForm(initialFormState);
         setLoading(false)
     }
 
@@ -84,13 +108,14 @@ export default function CreationForm() {
                 </CreateButton>
             </LoadingOverlay>
             </FormItemWrapper>
-            <Button onClick={(ev) => {
-                setExpanded(old => !old)}}
-                type={"button"}
-                style={{alignSelf: "center"}}
-                >
-                Open
-            </Button>
+
+            
+            { hasCookies &&
+                <Button type="button" onClick={() => {setExpanded(expanded => !expanded)}}>
+                    {expanded ? <ExpandLess/> : <ExpandMore />}
+                </Button>
+            }
+
             { expanded &&
                 <>
                <PasswordField value={form.password} clickHandler={changeHandler} />
@@ -100,6 +125,7 @@ export default function CreationForm() {
                </FormItemWrapper>
                </>
             }
+
             </StyledCreationForm>
 
         </div>       

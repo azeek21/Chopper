@@ -6,14 +6,20 @@ import Title from "@/components/title";
 import { useEffect, useState } from "react";
 import typeWriter from "@/utils/typewriter";
 import Cookie from "@/components/cookie-popup";
+import { useSelector } from "react-redux";
+import { RootState } from "@/GlobalRedux/store";
 
 export default function Index() {
     const [user, setUser] = useState('')
-
+    const urls = useSelector((state: RootState) => state.urls);
+    console.log("INDEX REDUX>>>")
+    console.log(urls.urls.length);
+    console.log("INDEX REDUX <<<");
+    
     useEffect(() => {
-          setTimeout(() => {
-            typeWriter();
-          }, 1000);
+        //   setTimeout(() => {
+        //     typeWriter();
+        //   }, 1000);
     }, [])
 
     return (
@@ -31,6 +37,8 @@ export default function Index() {
                 Our tool allows you seamlessly track your links with simple and easy-to-remember yet powerfull links and provide your customers a unique toilered experinece
             </HomeText>
         <CreationForm />
+        <p>{urls.urls.length}</p>
+        { urls.urls.length > 0 && urls.urls.map(url => <h5>{url.from_url}</h5>) }
         </StyledHome>
     )
 }
