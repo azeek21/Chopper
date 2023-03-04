@@ -29,7 +29,7 @@ const getIntChunks = (fromUrl: string) => {
 }
 
 
-function newFromUrl (oldFromUrl: string): string {
+function newUrlId (oldFromUrl: string): string {
     const intChunks = getIntChunks(oldFromUrl);
 
     let strChunks: string[] = new Array(2);
@@ -51,4 +51,4 @@ function newFromUrl (oldFromUrl: string): string {
 }
 
 
-export default newFromUrl;
+export default newUrlId;

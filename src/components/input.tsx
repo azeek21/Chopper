@@ -13,11 +13,8 @@ const Input = styled.input`
     width: 100%;
     box-shadow: ${({theme}) => theme.shadow.primary};
 
-
-    ::-webkit-datetime-edit-year-field:not([aria-valuenow]),
-    ::-webkit-datetime-edit-month-field:not([aria-valuenow]),
-    ::-webkit-datetime-edit-day-field:not([aria-valuenow]) {
-        color: transparent;
+    ::placeholder {
+        color: ${ ({theme}) => theme.textColor.secondary};
     }
 
     &:hover {

@@ -1,7 +1,8 @@
 import { Schema, model, models } from "mongoose";
 
 export interface URL_DATA_INTERFACE {
-    from_url: string,
+    url: string,
+    urlid: string,
     to_url: string,
     owner: string,
     created_at: number,
@@ -12,7 +13,8 @@ export interface URL_DATA_INTERFACE {
 }
 
 const URL_DATA_SCHEMA = new Schema<URL_DATA_INTERFACE>({
-    from_url: {type: String,required: true},
+    url: {type: String, required: true},
+    urlid: {type: String,required: true},
     to_url: {type: String, required: true},
     owner: {type: String, required: true},
     created_at: {type: Number, default: Date.now()},
