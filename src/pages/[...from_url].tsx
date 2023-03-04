@@ -2,6 +2,7 @@ import mongoClient from "@/db/connect";
 import UrlModel, { URL_DATA_INTERFACE } from "@/db/models/url-model";
 import { HydratedDocument } from "mongoose";
 import { GetServerSidePropsContext } from "next";
+import dayjs from "dayjs";
 
 export default function RedirectTo(props: any) {
   console.log(props.data);
@@ -16,14 +17,17 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   if (dest_id) {
     await mongoClient();
     const doc = await UrlModel.findOne<HydratedDocument<URL_DATA_INTERFACE>>({
-      from_url: dest_id[0],
+      urlid: dest_id[0],
     }).exec();
 
-    if (!doc) {
+    const now = dayjs().unix();
+
+    if (!doc || (doc.timeout && now > doc.timeout) || (doc.limit && doc.clicks >= doc.limit)) {
         return {
             notFound: true,
         }
     }
+
     doc.clicks = doc.clicks + 1;
     await doc.save();
     console.log(doc)
@@ -36,8 +40,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   }
 
   return {
-    props: {
-      data: "Data here",
-    },
-  };
+    notFound: true,
+  }
 }

@@ -16,7 +16,7 @@ export default async function getUrls(req: NextApiRequest) {
     let tmpUrl;
 
     for ( let i = 0; i < user.urls.length; i++ ) {
-        tmpUrl = await UrlModel.findOne<HydratedDocument<URL_DATA_INTERFACE>>({from_url: user.urls[i], owner: user.uid}).exec();
+        tmpUrl = await UrlModel.findOne<HydratedDocument<URL_DATA_INTERFACE>>({urlid: user.urls[i], owner: user.uid}).exec();
         if (tmpUrl) {
             urls.push(tmpUrl);
         }
