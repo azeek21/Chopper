@@ -3,16 +3,16 @@ import getUrl from "@/db/get-url";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-    const from_url = req.query.from_url;
-    console.log(from_url);
-    if (!from_url || typeof(from_url) === "object" && from_url.length > 1) {
+    const urlid = req.query.urlid;
+    console.log(urlid);
+    if (!urlid || typeof(urlid) === "object" && urlid.length > 1) {
         res.status(404).json({message: "Bad request"})
         return ;
     }
 
     await mongoClient();
 
-    const url = await getUrl(req, from_url[0]);
+    const url = await getUrl(req, urlid[0]);
 
     console.log(url);
     if (!url) {
@@ -20,4 +20,4 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return ;
     }
     res.status(200).json({url: url});
-}
+};

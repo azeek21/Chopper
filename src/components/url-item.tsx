@@ -46,7 +46,7 @@ export default function UrlItem({ url }: { url: URL_DATA_INTERFACE }) {
             Copy();
           }}
           title={`Copy ${url.url} to Clipboard`}
-          style={{color: copied ? "lightgreen" : "white"}}
+          style={{color: copied ? "#0dff00" : "white"}}
         >
           <ContentCopy color="inherit"/>
         </CopyButton>
@@ -138,7 +138,7 @@ export default function UrlItem({ url }: { url: URL_DATA_INTERFACE }) {
         
         {/* EDITc BUTTON */}
         <Button onClick={() => {setEditing(editing => !editing)}}>
-          { editing ? <Save /> : <ModeEdit /> }
+          { editing ? <Save titleAccess="Save"/> : <ModeEdit titleAccess="Edit"/> }
         </Button>
 
         </Controls>

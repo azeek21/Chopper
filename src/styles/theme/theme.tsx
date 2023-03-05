@@ -9,7 +9,7 @@ let THEME = {
         },
         textColor: {
             primary: "rgb(45, 45, 45)",
-            secondary: "rgba(45,45,45, 0.6)",
+            secondary: "rgba(45, 0, 45, 0.6)",
             tertiary: "rgb(130, 255, 180)",
             purple: "#810094",
             pink: "#fb457f",

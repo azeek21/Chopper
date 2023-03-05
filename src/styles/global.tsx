@@ -53,6 +53,7 @@ body {
   padding: 0px;
   overflow-x: hidden;
   min-height: 100vh;
+  height: 100vh;
   text-rendering: optimizeSpeed;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   font-size: 1rem;
