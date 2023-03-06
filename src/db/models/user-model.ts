@@ -13,6 +13,8 @@ export interface Retry_Interface {
     // unix date that user will be able to retry the password or access the url after;
     // every time count is bigger that max_retry_count cooldown (this) will double;
     cools_at?: number,
+
+    last_cooldown_duration?: number,
 }
 
 export interface USER_INTERFACE {

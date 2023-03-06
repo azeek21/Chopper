@@ -3,6 +3,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { serialize, parse } from "cookie";
 import mongoClient from "@/db/connect";
 import CreateUser from "@/db/create-user";
+import generateUserCookies from "@/utils/generate-user-cookies";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const cookies = req.cookies;
@@ -14,20 +15,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const user = await CreateUser();
         await user.save();
 
-        const date = new Date();
-        date.setFullYear(date.getFullYear() + 1);
-        const uid = serialize("weak-uid", user.uid, {
-            path: '/',
-            expires: date,
-            sameSite: true,
-        });
-        const secret = serialize("weak-secret", user.secret!, {
-            path: '/',
-            expires: date,
-            sameSite: true,
-        });
+        const userCookies = generateUserCookies(user);
 
-        res.setHeader("Set-Cookie", [uid, secret]);
+        res.setHeader("Set-Cookie", [userCookies.uid, userCookies.secret]);
     }
     return res.status(200).json({success: "ok"});
 };

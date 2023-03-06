@@ -1,7 +1,7 @@
 import mongoClient from "@/db/connect";
 import UrlModel, { URL_DATA_INTERFACE } from "@/db/models/url-model";
 import { HydratedDocument } from "mongoose";
-import { GetServerSidePropsContext } from "next";
+import { GetServerSidePropsContext, NextApiRequest } from "next";
 import dayjs from "dayjs";
 import styled from "styled-components";
 import { ChangeEvent, useEffect, useState } from "react";
@@ -9,6 +9,7 @@ import { FormItemWrapper } from "@/components/creation-form";
 import Input from "@/components/input";
 import Button from "@/components/button";
 import { Key, Visibility, VisibilityOff, ArrowRightAlt } from "@mui/icons-material";
+import getUser from "@/db/get-user";
 
 export default function RedirectTo({id}: {id: URL_DATA_INTERFACE}) {
 
@@ -113,12 +114,19 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       };
     }
 
-    doc.clicks = doc.clicks + 1;
+    // if url is password protected return password form;
     if (doc.password) {
-      return {
-        props: {id: doc.urlid},
-      };
+      const user = await getUser(context.req as NextApiRequest); // we only need cookies so I did req as NextApiRequest, Not recommended way;
+      // check if user ever accessed url with remember me option turned on;
+      if (!user || !(user.has_access_to?.includes(dest_id[0])))
+      {
+        return {
+          props: {id: doc.urlid},
+        };
+      }
     }
+
+    doc.clicks = doc.clicks + 1;
     await doc.save();
     console.log(doc);
     return {
