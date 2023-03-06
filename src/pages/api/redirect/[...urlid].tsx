@@ -61,6 +61,7 @@ export default async function handler(
   // if url is password protected
   if (url.password) {
     // get and check if user eixsts;
+    console.log("PROTECTING >>>");
     let user = await getUser(req);
     if (!user) {
       // if user doesn't exist, put cookies so that we can recognise user later
@@ -69,14 +70,18 @@ export default async function handler(
       const userCookies = generateUserCookies(user);
       res.setHeader("Set-Cookie", [userCookies.uid, userCookies.secret]);
     }
-
+    console.log("USER FETCHED >>>");
+    
     // check if user has been retrying;
     if (!isAllowable(user, url.urlid)) {
       res.status(400).json({ message: "You are not allowed. Due to too many wrong failed tries."})
       return ;
     }
-
+    console.log("USER ALLOWABLE >>>");
+  
     const user_password = req.body.password;
+    console.log("USER PROVIDED PASSWORD: " + user_password);
+  
     // check if user provided password
     if (!user_password) {
       res.status(404).json({ error: "Password not provided" });
@@ -85,17 +90,24 @@ export default async function handler(
 
     // if password didn't match
     if (user_password != url.password) {
-
+      console.log("PASSWORD DIDNT MATCH " + user_password as string + " VS " + url.password);
+      
       const retryObject = getRetryObject(user, url.urlid);
       // if this is first try
       if (!retryObject) {
+        console.log("RETRY OBJECT NOT FOUND, PUTTING NEW...");
+        
         let newRetryObject = createRetryObject(url.urlid);
         newRetryObject.count += 1;
         addRetryObject(user, newRetryObject);
+        await user.save();
+        res.status(400).redirect("/" + url.urlid);
         return ;
       };
 
-      // add 1 to retry count cuz password was wrong;
+      console.log("RETRY OBJECT FOUND:", retryObject);
+
+      // add 1 to retry count cuz password was wrong
       retryObject.count += 1;
 
       // if user reached retry limit
@@ -112,9 +124,12 @@ export default async function handler(
         return ;
       }
 
+      console.log("RETRY COUNT -> ", retryObject.count);
+
       updateRetryObject(user, retryObject);
+      user.markModified("retries")
       await user.save();
-      res.status(400).json({ message: "WRONG PASSWORD. You have another " + (3 - retryObject.count) + "tries left"})
+      res.status(400).redirect("/" + url.urlid);
       return ;
     };
 
