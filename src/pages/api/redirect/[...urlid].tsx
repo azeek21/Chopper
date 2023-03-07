@@ -117,6 +117,7 @@ export default async function handler(
         } else {
           retryObject.last_cooldown_duration = retryObject.last_cooldown_duration * 2;
         };
+        retryObject.cools_at = dayjs().unix() + retryObject.last_cooldown_duration;
         retryObject.count = 0;
         updateRetryObject(user, retryObject);
         await user.save();
@@ -127,7 +128,6 @@ export default async function handler(
       console.log("RETRY COUNT -> ", retryObject.count);
 
       updateRetryObject(user, retryObject);
-      user.markModified("retries")
       await user.save();
       res.status(400).redirect("/" + url.urlid);
       return ;

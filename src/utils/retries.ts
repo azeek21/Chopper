@@ -1,5 +1,6 @@
 import { Retry_Interface, USER_INTERFACE } from "@/db/models/user-model";
 import dayjs from "dayjs";
+import { HydratedDocument } from "mongoose";
 
 export function getRetryObject(user: USER_INTERFACE, urlid: string) {
   if (user.retries) {
@@ -22,7 +23,7 @@ export function createRetryObject(urlid: string): Retry_Interface {
 // return true if user didn't have retry object and added successfully;
 // return false if user already had such object and nothing will be changed;
 export function addRetryObject(
-  user: USER_INTERFACE,
+  user: HydratedDocument<USER_INTERFACE>,
   retryObject: Retry_Interface
 ) {
   if (!user.retries) {
@@ -34,6 +35,7 @@ export function addRetryObject(
     return false;
   }
   user.retries = [...user.retries, retryObject];
+  user.markModified('retries')
   return true;
 }
 
@@ -41,7 +43,7 @@ export function addRetryObject(
 // returns void;
 // ! be careful, retry object will be replaced by passed object as a whole;
 export function updateRetryObject(
-  user: USER_INTERFACE,
+  user: HydratedDocument<USER_INTERFACE>,
   retryObject: Retry_Interface
 ): void {
   if (!user.retries) {
@@ -50,11 +52,12 @@ export function updateRetryObject(
   }
   const all = user.retries.filter((retry) => retry.urlid != retryObject.urlid);
   user.retries = [...all, retryObject];
+  user.markModified('retries')
 }
 
 // increments retry count of retry object with urlid of urlid and returns true
 // returns false if retry object with urlid not found;
-export function incrementRetryCount(user: USER_INTERFACE, urlid: string) {
+export function incrementRetryCount(user: HydratedDocument<USER_INTERFACE>, urlid: string) {
   let retryObject = getRetryObject(user, urlid);
   if (!retryObject) {
     return false;
@@ -62,6 +65,7 @@ export function incrementRetryCount(user: USER_INTERFACE, urlid: string) {
 
   retryObject.count += 1;
   updateRetryObject(user, retryObject);
+  user.markModified("retries")
   return true;
 }
 
@@ -93,7 +97,7 @@ export function isAllowable(user: USER_INTERFACE, urlid: string) {
 };
 
 
-export function resetUserRetries(user: USER_INTERFACE, urlid: string) {
+export function resetUserRetries(user: HydratedDocument<USER_INTERFACE>, urlid: string) {
     const retryObject = getRetryObject(user, urlid);
 
     if (!retryObject) {
@@ -118,12 +122,14 @@ export function resetUserRetries(user: USER_INTERFACE, urlid: string) {
     retryObject.count = 0;
     retryObject.max_retry_count = 3;
     updateRetryObject(user, retryObject);
+    user.markModified("retries")
     return true;
 }
 
 
-export function deleteRetryObject (user: USER_INTERFACE, urlid: string) {
+export function deleteRetryObject (user: HydratedDocument<USER_INTERFACE>, urlid: string) {
   if (user.retries) {
     user.retries = user.retries.filter(retry => retry.urlid != urlid);
   }
+  user.markModified("retries")
 }
