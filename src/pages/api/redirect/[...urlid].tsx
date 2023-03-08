@@ -71,7 +71,7 @@ export default async function handler(
       res.setHeader("Set-Cookie", [userCookies.uid, userCookies.secret]);
     }
     console.log("USER FETCHED >>>");
-    
+
     // check if user has been retrying;
     if (!isAllowable(user, url.urlid)) {
       res.status(400).json({ message: "You are not allowed. Due to too many wrong failed tries."})
@@ -121,7 +121,7 @@ export default async function handler(
         retryObject.count = 0;
         updateRetryObject(user, retryObject);
         await user.save();
-        res.status(400).json({ message: "You failed 3 times, Please wait 3 minutes before trying again."});
+        res.redirect("/" + url.urlid);
         return ;
       }
 

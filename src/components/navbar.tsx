@@ -15,7 +15,7 @@ export default function Navbar() {
       <StyledNavbar>
         <NavbarLink href="/" name="HOME" />
         <NavbarLink href="/dashboard" name="DASHBOARD" />
-        <NavbarLink href="/blog" name="BLOG" />
+        <NavbarLink href="/news" name="NEWS" />
 
         {/* SINGIN */}
         {/* {SESstatus === "loading" || SESstatus === "unauthenticated" || loading ? (

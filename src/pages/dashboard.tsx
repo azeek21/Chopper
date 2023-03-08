@@ -14,6 +14,6 @@ export default function Dashboard() {
 }
 
 const StyledDashboard = styled.section`
-    margin: 5rem auto auto auto;
-    padding: auto var(--padding-big);
+    margin: auto auto auto auto;
+    padding-top: 5rem;
 `;

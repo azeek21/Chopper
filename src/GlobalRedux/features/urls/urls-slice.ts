@@ -18,12 +18,30 @@ export const urlsSlice = createSlice({
     },
     removeUrl: (state, action) => {
       state.urls = state.urls.filter(
-        (url) => url.from_url == action.payload.from_url
+        (url) => url.urlid == action.payload.from_url
       );
     },
     updateUrl: (state, action) => {
+      fetch("/api/urls/update/" + action.payload.urlid, {
+        method: "POST",
+        body: JSON.stringify(action.payload),
+      })
+        .then((resp) => resp.json())
+        .then((data) => {
+          console.log(data);
 
-    }
+          if (state.urls.length == 0 || state.urls.length == 1) {
+            state.urls = [data];
+            return;
+          }
+
+          const newArray = state.urls.filter(
+            (url) => url.urlid != data.urlid
+          );
+
+          state.urls = [...newArray, data];
+        });
+    },
   },
 });
 
