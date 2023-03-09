@@ -1,6 +1,5 @@
 import { URL_DATA_INTERFACE } from "@/db/models/url-model";
 import {
-  Link,
   Key,
   Visibility,
   VisibilityOff,
@@ -15,8 +14,8 @@ import { FormItemWrapper } from "./creation-form";
 import Input from "./input";
 import Button from "./button";
 import styled from "styled-components";
-import { updateUrl } from "@/GlobalRedux/features/urls/urls-slice";
-import { useDispatch } from "react-redux";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import LoadingOverlay from "./loading-overlay";
 
 export default function UrlItem({ url }: { url: any }) {
   const [loading, setLoading] = useState(false);
@@ -24,7 +23,41 @@ export default function UrlItem({ url }: { url: any }) {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [copied, setCopied] = useState(false);
   const [editing, setEditing] = useState(false);
-  const dispatch = useDispatch();
+  const queryClient = useQueryClient();
+
+  // fetching
+  const { data, isLoading, error } = useQuery(
+    "url" + url.urlid,
+    async () => {
+      return (await fetch("/api/urls/get/" + url.urlid)).json();
+    },
+    {
+      initialData: url,
+    }
+  );
+
+  // updating
+  const update = useMutation(
+    async (data: any) => {
+      await fetch("/api/urls/update/" + url.urlid, {
+        method: "POST",
+        body: JSON.stringify(data),
+      });
+    },
+    {
+      onMutate: () => {
+        setLoading(true);
+      },
+      onSuccess: () => {
+        queryClient.invalidateQueries("url" + url.urlid);
+      },
+      onSettled: () => {
+        setLoading(false);
+        setEditing(false);
+      },
+    }
+  );
+
   const changeHandler = (ev: ChangeEvent<HTMLInputElement>) => {
     setForm((oldForm: any) => {
       let copy = { ...oldForm };
@@ -57,141 +90,136 @@ export default function UrlItem({ url }: { url: any }) {
     }, 10000);
   };
 
-  const Save = () => {
-    console.log("SAVING: ", form);
-    setLoading(true);
-    // updating individual url for backend will hapen inside dispatch event
-    dispatch(updateUrl(form));
-    setEditing(false);
-    setLoading(false);
-  };
-
   return (
     <form
       onSubmit={(ev) => {
         ev.preventDefault();
         if (editing) {
-          Save();
-        } else setEditing((old) => !old);
+          update.mutate(form);
+        } else setEditing(true);
       }}
     >
-      <StyledUrlItem>
-        <CopyField
-          title={`Copy ${url.url} to Clipboard`}
-          onClick={() => {
-            Copy();
-          }}
-        >
-          <CopyButton
-            active={true}
+      <LoadingOverlay loading={loading || isLoading}>
+        <StyledUrlItem>
+          <CopyField
+            title={`Copy ${url.url} to Clipboard`}
             onClick={() => {
               Copy();
             }}
-            title={`Copy ${url.url} to Clipboard`}
-            style={{ color: copied ? "#0dff00" : "white" }}
           >
-            <ContentCopy color="inherit" />
-          </CopyButton>
-          <h3>{url.url}</h3>
-        </CopyField>
-        {/* PASSWORD INPUT */}
+            <CopyButton
+              active={true}
+              onClick={() => {
+                Copy();
+              }}
+              title={`Copy ${url.url} to Clipboard`}
+              style={{ color: copied ? "#0dff00" : "white" }}
+            >
+              <ContentCopy color="inherit" />
+            </CopyButton>
+            <h3>{url.url}</h3>
+          </CopyField>
+          {/* PASSWORD INPUT */}
 
-        <UrlItemWrapper>
-          <Input
-            disabled={!editing}
-            id={url.urlid + "password"}
-            value={form.password || ""}
-            name="password"
-            placeholder=" "
-            title="Any password, security is yours, who cares 🤷‍♂️"
-            required={false}
-            type={passwordVisible ? "text" : "password"}
-            style={{ paddingRight: "2rem" }}
-            onChange={changeHandler}
-            autoComplete="new-password"
-          />
-          <span>
-            {" "}
-            <Key />{" "}
-          </span>
-          <div
-            onClick={() => {
-              setPasswordVisible((visible) => !visible);
-            }}
-          >
-            <Button type="button">
-              {passwordVisible ? <Visibility /> : <VisibilityOff />}
+          <UrlItemWrapper>
+            <Input
+              disabled={!editing}
+              id={url.urlid + "password"}
+              value={form.password || ""}
+              name="password"
+              placeholder=" "
+              title="Any password, security is yours, who cares 🤷‍♂️"
+              required={false}
+              type={passwordVisible ? "text" : "password"}
+              style={{ paddingRight: "2rem" }}
+              onChange={changeHandler}
+              autoComplete="new-password"
+            />
+            <span>
+              {" "}
+              <Key />{" "}
+            </span>
+            <div
+              onClick={() => {
+                setPasswordVisible((visible) => !visible);
+              }}
+            >
+              <Button type="button">
+                {passwordVisible ? <Visibility /> : <VisibilityOff />}
+              </Button>
+            </div>
+            <label className="label" htmlFor={url.urlid + "password"}>
+              {" "}
+              Password{" "}
+            </label>
+          </UrlItemWrapper>
+
+          {/* LIMIT INPUT */}
+          <UrlItemWrapper>
+            <Input
+              disabled={!editing}
+              type={"number"}
+              id={url.urlid + "limit"}
+              name="limit"
+              value={form.limit || ""}
+              onChange={changeHandler}
+              placeholder=" "
+              title="Url will be disabled after being used for N times."
+              min={1}
+            />
+            <div></div>
+            <label className="label" htmlFor={url.urlid + "limit"}>
+              {" "}
+              Limit (number){" "}
+            </label>
+            <span>
+              {" "}
+              <LinkOff />{" "}
+            </span>
+          </UrlItemWrapper>
+
+          {/* TIMEOUT INPUT */}
+          <UrlItemWrapper>
+            <Input
+              disabled={!editing}
+              type={"date"}
+              id={url.urlid + "timeout"}
+              name="timeout"
+              value={form.timeout || ""}
+              onChange={changeHandler}
+              placeholder=" "
+              title="Url will be disabled after this date."
+            />
+            <div></div>
+            <label className="label" htmlFor={url.urlid + "timeout"}>
+              {" "}
+              Expiration Date{" "}
+            </label>
+            <span>
+              {" "}
+              <ManageHistory />{" "}
+            </span>
+          </UrlItemWrapper>
+
+          {/* CONTROLS HERE */}
+          <Controls>
+            {/* EDITc BUTTON */}
+            <Button type="submit">
+              {editing ? (
+                <SaveIcon titleAccess="Save" />
+              ) : (
+                <ModeEdit titleAccess="Edit" />
+              )}
             </Button>
-          </div>
-          <label className="label" htmlFor={url.urlid + "password"}>
-            {" "}
-            Password{" "}
-          </label>
-        </UrlItemWrapper>
-
-        {/* LIMIT INPUT */}
-        <UrlItemWrapper>
-          <Input
-            disabled={!editing}
-            type={"number"}
-            id={url.urlid + "limit"}
-            name="limit"
-            value={form.limit || ""}
-            onChange={changeHandler}
-            placeholder=" "
-            title="Url will be disabled after being used for N times."
-          />
-          <div></div>
-          <label className="label" htmlFor={url.urlid + "limit"}>
-            {" "}
-            Limit (number){" "}
-          </label>
-          <span>
-            {" "}
-            <LinkOff />{" "}
-          </span>
-        </UrlItemWrapper>
-
-        {/* TIMEOUT INPUT */}
-        <UrlItemWrapper>
-          <Input
-            disabled={!editing}
-            type={"date"}
-            id={url.urlid + "timeout"}
-            name="timeout"
-            value={form.timeout || ""}
-            onChange={changeHandler}
-            placeholder=" "
-            title="Url will be disabled after this date."
-          />
-          <div></div>
-          <label className="label" htmlFor={url.urlid + "timeout"}>
-            {" "}
-            Expiration Date{" "}
-          </label>
-          <span>
-            {" "}
-            <ManageHistory />{" "}
-          </span>
-        </UrlItemWrapper>
-
-        {/* CONTROLS HERE */}
-        <Controls>
-          {/* EDITc BUTTON */}
-          <Button type="submit">
-            {editing ? (
-              <SaveIcon titleAccess="Save" />
-            ) : (
-              <ModeEdit titleAccess="Edit" />
-            )}
-          </Button>
-        </Controls>
-      </StyledUrlItem>
+          </Controls>
+        </StyledUrlItem>
+      </LoadingOverlay>
     </form>
   );
 }
 
 const StyledUrlItem = styled.div`
+  width: 100%;
   display: grid;
   grid-template-columns: 1.3fr 1fr 0.6fr 0.7fr 0.3fr;
   grid-gap: var(--padding-gigant);

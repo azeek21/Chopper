@@ -98,6 +98,8 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
         url.timeout = dayjs(data.timeout, "YYYY-MM-DD").unix();
     }
     await url.save();
+setTimeout(() => {
     res.status(201).json({...(url.toJSON()), timeout: url.timeout ? dayjs.unix(url.timeout).format("YYYY-MM-DD") : ""});
+}, 5000);
     return ;
 };

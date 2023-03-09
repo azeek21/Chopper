@@ -6,9 +6,7 @@ import LoadingOverlay from "./loading-overlay";
 import { Link, Key, Visibility, VisibilityOff, LinkOff, ManageHistory, Update } from "@mui/icons-material";
 import { getCookie } from "@/utils/cookie";
 import {ExpandLess, ExpandMore} from "@mui/icons-material";
-import { useDispatch } from "react-redux";
-import { addUrl } from "@/GlobalRedux/features/urls/urls-slice";
-
+import { useMutation, useQueryClient } from "react-query";
 
 type FORM_TYPE = {
     to_url: string,
@@ -27,12 +25,19 @@ const initialFormState = {
 export default function CreationForm() {
     const [form, setForm] = useState<FORM_TYPE>(initialFormState);
     const [passwordVisible, setPasswordVisible] = useState(false);
-    const dispatch = useDispatch();
     console.log("SSR -------------");
     
     const [loading, setLoading] = useState(false);
     const [expanded, setExpanded] = useState(false);
     const [hasCookies, setHasCookies] = useState(false);
+    const queryClient = useQueryClient();
+    const mutatator = useMutation(async () => {
+        return (await fetch('/api/urls/create', {method: "POST", body: JSON.stringify(form)})).json();
+    }, {
+        onMutate: () => { setLoading(true) },
+        onSuccess: () => { setForm(initialFormState); setLoading(false); },
+        onSettled: () => { queryClient.invalidateQueries("lastAdded") },
+    })
 
     useEffect( () => {
         const x = () => {
@@ -70,15 +75,7 @@ export default function CreationForm() {
     }
 
     const submitForm = async () => {
-        if (!form) {
-
-        }
-        setLoading(true);
-        const res = await (await fetch('/api/urls/create', {method: "POST", body: JSON.stringify(form)})).json();
-        console.log(res.data);
-        dispatch(addUrl(res.data))
-        setForm(initialFormState);
-        setLoading(false)
+        mutatator.mutate();
     }
 
     return (
@@ -144,7 +141,7 @@ export default function CreationForm() {
 
                 {/* LIMIT INPUT */}
                <FormItemWrapper>
-               <Input type={"number"} id="limit" name="limit" value={form.limit || ""} onChange={changeHandler} placeholder=" " title="Url will be disabled after being used for N times."/>
+               <Input type={"number"} id="limit" name="limit" min={1} value={form.limit || ""} onChange={changeHandler} placeholder=" " title="Url will be disabled after being used for N times."/>
                <label className="label" htmlFor="limit"> First N people can use this link </label>
                <span> <LinkOff /> </span>
                </FormItemWrapper>

@@ -6,7 +6,9 @@ import Header from "@/components/header";
 import Cookie from "@/components/cookie-popup";
 import { useEffect, useState } from "react";
 import { getCookie } from "@/utils/cookie";
-import StoreProvider from "@/GlobalRedux/provider";
+import { QueryClient, QueryClientProvider } from "react-query";
+
+const Qclient = new QueryClient();
 
 export default function App({ Component, pageProps }: AppProps) {
   const [popup, setPopup] = useState(false);
@@ -21,14 +23,14 @@ export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <>
+    <QueryClientProvider client={Qclient}>
       <ThemeProvider theme={THEME["light"]}>
-        <StoreProvider>
           <GlobalStyle />
           <Header />
           <Component {...pageProps} />
           {popup && <Cookie />}
-        </StoreProvider>
       </ThemeProvider>
+      </QueryClientProvider>
     </>
   );
 }

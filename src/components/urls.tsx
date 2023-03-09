@@ -1,14 +1,12 @@
 import UrlItem from "./url-item";
 import styled from "styled-components";
-import { useSelector } from "react-redux";
-import { RootState } from "@/GlobalRedux/store";
+import { URL_DATA_INTERFACE } from "@/db/models/url-model";
 
-export default function Urls() {
-  const urls = useSelector((state: RootState) => state.urls);
+export default function Urls({urls}: {urls: URL_DATA_INTERFACE[]} ) {
 
   return (
     <StyledUrls>
-      {urls.urls.length > 0 && urls.urls.map((url) => <UrlItem url={url} />)}
+      {urls.length > 0 && urls.map((url) => <UrlItem url={url} />)}
     </StyledUrls>
   );
 }

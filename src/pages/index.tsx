@@ -1,17 +1,19 @@
 import Button from "@/components/button";
 import CreationForm from "@/components/creation-form";
 import styled from "styled-components";
-import { ContentCopy, Link as LinkIcon, Grade } from "@mui/icons-material";
+import { ContentCopy, Link as LinkIcon, Grade, ReadMore } from "@mui/icons-material";
 import Title from "@/components/title";
 import { useEffect, useState } from "react";
 import typeWriter from "@/utils/typewriter";
-import { useSelector } from "react-redux";
-import { RootState } from "@/GlobalRedux/store";
 import Link from "next/link";
-import { url } from "inspector";
+import { useQuery } from "react-query";
+import LoadingOverlay from "@/components/loading-overlay";
 
 export default function Index() {
-  const urls = useSelector((state: RootState) => state.urls);
+
+  const {data, isLoading, error} = useQuery("lastAdded", async () => {
+    return (await fetch('/api/urls/get/last')).json();
+  })
 
   useEffect(() => {
     setTimeout(() => {
@@ -34,17 +36,18 @@ export default function Index() {
         unique toilered experinece
       </HomeText>
       <CreationForm />
-      { urls.urls.length > 0 
-          && 
-        <Copyable> 
-          <Button onClick={ () => {
-            navigator.clipboard.writeText(urls.urls[urls.urls.length - 1].url);
-            alert(urls.urls[urls.urls.length - 1].url + " COPIED ✅")
+      { (data && !error) && 
+        <LoadingOverlay loading={isLoading}>
+          <Copyable> 
+            <Button onClick={ () => {
+            navigator.clipboard.writeText(data.url);
           }}>
             <ContentCopy/>
-          </Button>
-          {urls.urls[urls.urls.length -1].url} <Link href={"/dashboard"}>>>></Link>
+            </Button>
+            {data.url} <Link href={"/dashboard"}><ReadMore /></Link>
         </Copyable>
+
+        </LoadingOverlay>
       }
     </StyledHome>
   );

@@ -19,5 +19,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         res.status(404).json({message: "Not Found, Bad cookies or such url does'nt exist"});
         return ;
     }
-    res.status(200).json({url: url});
+    setTimeout(() => {
+        res.status(200).json(url);
+    }, 4000);
+    return ;
 };
