@@ -36,7 +36,7 @@ export default function CreationForm() {
     }, {
         onMutate: () => { setLoading(true) },
         onSuccess: () => { setForm(initialFormState); setLoading(false); },
-        onSettled: () => { queryClient.invalidateQueries("lastAdded") },
+        onSettled: () => { setExpanded(false); queryClient.invalidateQueries("lastAdded") },
     })
 
     useEffect( () => {

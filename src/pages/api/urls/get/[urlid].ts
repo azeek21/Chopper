@@ -4,21 +4,20 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const urlid = req.query.urlid;
-    console.log(urlid);
     if (!urlid || typeof(urlid) === "object" && urlid.length > 1) {
-        res.status(404).json({message: "Bad request"})
+        res.status(404).json({ error: "Bad request" })
         return ;
     }
 
     await mongoClient();
 
-    const url = await getUrl(req, urlid[0]);
+    const url = await getUrl(req, urlid as string);
 
-    console.log(url);
     if (!url) {
-        res.status(404).json({message: "Not Found, Bad cookies or such url does'nt exist"});
+        res.status(404).json({ error: "Url not found! Non-existing urlid or not authenticated."});
         return ;
     }
+
     setTimeout(() => {
         res.status(200).json(url);
     }, 4000);

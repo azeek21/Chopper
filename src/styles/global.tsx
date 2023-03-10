@@ -68,6 +68,19 @@ body {
   background-size: 50%;
 }
 
+body::before{
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(255,255,255,0.1);
+  backdrop-filter: blur(3px);
+  z-index: -99;
+}
+
+
 h1,
 h2,
 h3,

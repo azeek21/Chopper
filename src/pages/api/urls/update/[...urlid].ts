@@ -13,14 +13,6 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
         return ;
     }
 
-    console.log("UPDATE >>>");
-    console.log("BODY>");
-    console.log(typeof(req.body));
-    console.log(req.body);
-    
-    
-    
-
     let urlid = req.query.urlid;
     if (!urlid || (urlid && typeof(urlid) == "object") && urlid.length > 1) {
         res.status(400).json({ error: "Bad request! updates should be to and only to /api/urls/update/urlid as a post request."})
@@ -98,8 +90,6 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
         url.timeout = dayjs(data.timeout, "YYYY-MM-DD").unix();
     }
     await url.save();
-setTimeout(() => {
     res.status(201).json({...(url.toJSON()), timeout: url.timeout ? dayjs.unix(url.timeout).format("YYYY-MM-DD") : ""});
-}, 5000);
     return ;
 };

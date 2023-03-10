@@ -1,7 +1,12 @@
 import Button from "@/components/button";
 import CreationForm from "@/components/creation-form";
 import styled from "styled-components";
-import { ContentCopy, Link as LinkIcon, Grade, ReadMore } from "@mui/icons-material";
+import {
+  ContentCopy,
+  Link as LinkIcon,
+  Grade,
+  ReadMore,
+} from "@mui/icons-material";
 import Title from "@/components/title";
 import { useEffect, useState } from "react";
 import typeWriter from "@/utils/typewriter";
@@ -10,10 +15,22 @@ import { useQuery } from "react-query";
 import LoadingOverlay from "@/components/loading-overlay";
 
 export default function Index() {
-
-  const {data, isLoading, error} = useQuery("lastAdded", async () => {
-    return (await fetch('/api/urls/get/last')).json();
-  })
+  const [copied, setCopied] = useState(false);
+  const { data, isLoading, error } = useQuery(
+    "lastAdded",
+    async () => {
+      const lastUrl = await (await fetch("/api/urls/get/last")).json();
+      if (lastUrl.error) {
+        return null;
+      }
+      return lastUrl;
+    },
+    {
+      onSuccess: () => {
+        setCopied(false);
+      },
+    }
+  );
 
   useEffect(() => {
     setTimeout(() => {
@@ -35,36 +52,51 @@ export default function Index() {
         and easy-to-remember yet powerfull links and provide your customers a
         unique toilered experinece
       </HomeText>
-      <CreationForm />
-      { (data && !error) && 
+      <ContentWrapper>
+      {data && !error && (
         <LoadingOverlay loading={isLoading}>
-          <Copyable> 
-            <Button onClick={ () => {
-            navigator.clipboard.writeText(data.url);
-          }}>
-            <ContentCopy/>
+          <Copyable copied={copied}>
+            <Button
+              onClick={() => {
+                navigator.clipboard.writeText(data.url);
+                setCopied(true);
+              }}
+              disabled={copied}
+            >
+              <ContentCopy />
             </Button>
-            {data.url} <Link href={"/dashboard"}><ReadMore /></Link>
-        </Copyable>
-
+            {data.url}{" "}
+            <Button>
+            <Link href={"/dashboard"} style={{color: "inherit"}}>
+              <ReadMore color={"inherit"}/>
+            </Link>
+            </Button>
+          </Copyable>
         </LoadingOverlay>
-      }
+      )}
+        <CreationForm />
+      </ContentWrapper>
     </StyledHome>
   );
 }
 
-const Copyable = styled.h3`
+const Copyable = styled.h3<{ copied?: boolean | unknown }>`
   display: flex;
   align-items: center;
   justify-content: flex-start;
   gap: var(--padding-normal);
-`
+  padding: var(--padding-normal);
+  box-shadow: ${({ theme }) => theme.shadow.primary};
+  border-radius: var(--padding-normal);
+  border: 0.2rem solid transparent;
+  border-color: ${(props) => (props.copied ? "#00ff2f" : "transparent")};
+`;
 
 const HomeTitle = styled(Title)`
   font-size: var(--fs-3xl);
   line-height: normal;
   color: ${({ theme }) => theme.textColor.primary};
-  max-width: 70%;
+  max-width: 50%;
 `;
 
 const Nefor = styled.div`
@@ -75,7 +107,7 @@ const Nefor = styled.div`
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   transition: 300ms ease-out;
-  min-height: 100%;
+  min-height: 120%;
 `;
 
 const HomeText = styled.p`
@@ -83,7 +115,7 @@ const HomeText = styled.p`
   color: ${({ theme }) => theme.textColor.secondary};
   line-height: normal;
   letter-spacing: 0.05rem;
-  max-width: 60%;
+  max-width: 50%;
 `;
 
 const StyledHome = styled.section`
@@ -91,8 +123,7 @@ const StyledHome = styled.section`
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  max-width: 50%;
-  gap: 1rem;
+  gap: var(--padding-gigant);
 `;
 
 const RoundButton = styled(Button)`
@@ -103,7 +134,17 @@ const RoundButton = styled(Button)`
   color: white;
   box-shadow: ${({ theme }) => theme.shadow.primary};
   & a {
-    color: inherit
+    color: inherit;
   }
 `;
 
+const ContentWrapper = styled.div`
+  padding: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  width: 50%;
+  flex-direction: column;
+  height: auto;
+  gap: var(--padding-small);
+`;

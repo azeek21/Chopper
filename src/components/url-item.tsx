@@ -7,6 +7,7 @@ import {
   ManageHistory,
   ContentCopy,
   ModeEdit,
+  Delete as DeleteIcon,
   Save as SaveIcon,
 } from "@mui/icons-material";
 import { ChangeEvent, useEffect, useState } from "react";
@@ -29,10 +30,17 @@ export default function UrlItem({ url }: { url: any }) {
   const { data, isLoading, error } = useQuery(
     "url" + url.urlid,
     async () => {
-      return (await fetch("/api/urls/get/" + url.urlid)).json();
+      const newUrl = await (await fetch("/api/urls/get/" + url.urlid)).json();
+      if (newUrl.error) {
+        return null;
+      }
+      return newUrl;
     },
     {
       initialData: url,
+      onSuccess: (data) => {
+        setForm(data);
+      },
     }
   );
 
@@ -54,6 +62,27 @@ export default function UrlItem({ url }: { url: any }) {
       onSettled: () => {
         setLoading(false);
         setEditing(false);
+      },
+    }
+  );
+
+  // deleting
+  const remove = useMutation(
+    async () => {
+      await fetch("/api/urls/delete/" + url.urlid, {
+        method: "DELETE",
+      });
+    },
+    {
+      onMutate: () => {
+        setLoading(true);
+      },
+      onSuccess: () => {},
+      onSettled: () => {
+        setLoading(false);
+        setEditing(false);
+        queryClient.invalidateQueries("urls" + url.urlid);
+        queryClient.invalidateQueries("url" + url.urlid);
       },
     }
   );
@@ -89,6 +118,10 @@ export default function UrlItem({ url }: { url: any }) {
       setCopied(false);
     }, 10000);
   };
+
+  if (!data || error) {
+    return <></>;
+  }
 
   return (
     <form
@@ -211,6 +244,20 @@ export default function UrlItem({ url }: { url: any }) {
                 <ModeEdit titleAccess="Edit" />
               )}
             </Button>
+            <Button
+              title="DELETE"
+              onClick={() => {
+                if (
+                  confirm(
+                    "You are going to delete this URL entry. Proceed to delete ?"
+                  )
+                ) {
+                  remove.mutate();
+                }
+              }}
+            >
+              <DeleteIcon />
+            </Button>
           </Controls>
         </StyledUrlItem>
       </LoadingOverlay>
@@ -227,9 +274,10 @@ const StyledUrlItem = styled.div`
   justify-content: center;
   align-items: center;
   justify-items: center;
-  border-bottom: 0.2rem solid gray;
-  padding: var(--padding-normal) 0px;
+  padding: var(--padding-normal);
   color: ${({ theme }) => theme.textColor.purple};
+  box-shadow: ${({ theme }) => theme.shadow.primary};
+  border-radius: var(--padding-normal);
 `;
 
 const CopyButton = styled(Button)`

@@ -147,8 +147,9 @@ const StyledRedirectTo = styled.section`
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   let dest_id = context.query.from_url;
 
-  // check query and parse dest_id (url.urlid);
-  if ( !(dest_id && typeof(dest_id) == "object" && dest_id.length > 1) ) {
+  if ( !dest_id || ( typeof(dest_id) == "object" && dest_id.length > 1) ) {
+    console.log("1>>>");
+    
     return {
       notFound: true,
     }

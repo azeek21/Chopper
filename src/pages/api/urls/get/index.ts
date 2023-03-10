@@ -8,6 +8,10 @@ import { NextApiRequest, NextApiResponse } from "next";
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     await mongoClient();
     const urls = await getUrls(req);
-    res.status(200).json({urls: urls});
+    if (!urls || urls.length == 0) {
+        res.status(200).json({ error: "Bad request. Maybe not authenticated ?!. Maybe no urls created yet"});
+        return ;
+    };
+    res.status(200).json(urls);
     return ;
-}
+};

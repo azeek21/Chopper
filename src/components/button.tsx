@@ -1,7 +1,7 @@
 import React from "react"
 import styled from "styled-components"
 
-const Button  = styled.button`
+const Button  = styled.button<{active?: boolean | unknown}>`
     display: flex;
     align-items: center;
     justify-content: center;
@@ -16,8 +16,8 @@ const Button  = styled.button`
     color: white;
     &:hover {
         box-shadow: ${ ({theme}) => theme.shadow.primary};
-    }
-
+    };
+    ${ ({ disabled}) => disabled ? "background-color: gray;" : ""}
 `
 
 export default Button;

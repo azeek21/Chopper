@@ -6,7 +6,7 @@ export default function Urls({urls}: {urls: URL_DATA_INTERFACE[]} ) {
 
   return (
     <StyledUrls>
-      {urls.length > 0 && urls.map((url) => <UrlItem url={url} />)}
+      {urls.length > 0 && urls.map((url) => <UrlItem key={url.urlid} url={url} />)}
     </StyledUrls>
   );
 }
