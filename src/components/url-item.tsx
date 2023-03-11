@@ -9,6 +9,8 @@ import {
   ModeEdit,
   Delete as DeleteIcon,
   Save as SaveIcon,
+  Undo,
+  Timelapse,
 } from "@mui/icons-material";
 import { ChangeEvent, useEffect, useState } from "react";
 import { FormItemWrapper } from "./creation-form";
@@ -17,13 +19,36 @@ import Button from "./button";
 import styled from "styled-components";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import LoadingOverlay from "./loading-overlay";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat"
+dayjs.extend(customParseFormat);
+
+const initialDeleteContext = {
+  deleting: false,
+  time_left: 5,
+  discard: () => {},
+};
+
+const DeleteContainer = styled.div<{active: boolean}>`
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  color: ${ ({ active }) => active ? "red" : "inherit"};
+  font-size: 100%;
+  svg {
+    font-size: 90%;
+  }
+`;
+
 
 export default function UrlItem({ url }: { url: any }) {
   const [loading, setLoading] = useState(false);
-  const [form, setForm] = useState(url);
+  const [form, setForm] = useState({...url, timeout: url.timeout ? dayjs.unix(url.timeout).format("YYYY-MM-DD") : ""});
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [copied, setCopied] = useState(false);
   const [editing, setEditing] = useState(false);
+  const [deleteContext, setDeleteContext] = useState(initialDeleteContext);
+
   const queryClient = useQueryClient();
 
   // fetching
@@ -34,6 +59,10 @@ export default function UrlItem({ url }: { url: any }) {
       if (newUrl.error) {
         return null;
       }
+      console.log(newUrl.timeout);
+      newUrl.timeout = newUrl.timeout ? dayjs.unix(newUrl.timeout).format("YYYY-MM-DD") : "";
+      console.log(newUrl.timeout);
+      
       return newUrl;
     },
     {
@@ -41,6 +70,7 @@ export default function UrlItem({ url }: { url: any }) {
       onSuccess: (data) => {
         setForm(data);
       },
+      enabled: !editing && !deleteContext.deleting,
     }
   );
 
@@ -69,7 +99,7 @@ export default function UrlItem({ url }: { url: any }) {
   // deleting
   const remove = useMutation(
     async () => {
-      await fetch("/api/urls/delete/" + url.urlid, {
+      return await fetch("/api/urls/delete/" + url.urlid, {
         method: "DELETE",
       });
     },
@@ -86,6 +116,31 @@ export default function UrlItem({ url }: { url: any }) {
       },
     }
   );
+
+  const deleteHandler = () => {
+    let i = deleteContext.time_left;
+
+    const deleteTimeout = setInterval(() => {
+      console.log("IN INTERVAL>>> ", i);
+
+      if (i == 0) {
+        remove.mutate();
+        clearInterval(deleteTimeout);
+        setDeleteContext(initialDeleteContext);
+      } else if (i > 0) {
+        setDeleteContext((old) => ({ ...old, time_left: old.time_left - 1 }));
+        i--;
+      }
+    }, 1000);
+    setDeleteContext((old) => ({
+      ...old,
+      deleting: true,
+      discard: () => {
+        clearInterval(deleteTimeout);
+        setDeleteContext(initialDeleteContext);
+      },
+    }));
+  };
 
   const changeHandler = (ev: ChangeEvent<HTMLInputElement>) => {
     setForm((oldForm: any) => {
@@ -237,26 +292,35 @@ export default function UrlItem({ url }: { url: any }) {
           {/* CONTROLS HERE */}
           <Controls>
             {/* EDITc BUTTON */}
-            <Button type="submit">
-              {editing ? (
-                <SaveIcon titleAccess="Save" />
-              ) : (
-                <ModeEdit titleAccess="Edit" />
-              )}
-            </Button>
+
+            {!deleteContext.deleting && (
+              <Button type="submit">
+                {editing ? (
+                  <SaveIcon titleAccess="Save" />
+                ) : (
+                  <ModeEdit titleAccess="Edit" />
+                )}
+              </Button>
+            )}
+
             <Button
-              title="DELETE"
+              type="button"
+              title={deleteContext.deleting ? "CANCEL" : "DELETE"}
               onClick={() => {
-                if (
-                  confirm(
-                    "You are going to delete this URL entry. Proceed to delete ?"
-                  )
-                ) {
-                  remove.mutate();
+                if (deleteContext.deleting) {
+                  deleteContext.discard();
+                } else {
+                  deleteHandler();
                 }
               }}
             >
-              <DeleteIcon />
+              {deleteContext.deleting ? <Undo /> : <DeleteIcon />}
+              {deleteContext.deleting && (
+                <DeleteContainer active={deleteContext.time_left < 3}>
+                  <p>{deleteContext.time_left}</p>
+                  <Timelapse />
+                </DeleteContainer>
+              )}
             </Button>
           </Controls>
         </StyledUrlItem>
@@ -264,6 +328,7 @@ export default function UrlItem({ url }: { url: any }) {
     </form>
   );
 }
+
 
 const StyledUrlItem = styled.div`
   width: 100%;
