@@ -13,6 +13,9 @@ import {
   Visibility,
   VisibilityOff,
   ArrowRightAlt,
+  Lock as LockIcon,
+  LockClock,
+  RepeatOn as RepeatOnIcon,
 } from "@mui/icons-material";
 import getUser from "@/db/get-user";
 import { getRetryObject, isAllowable } from "@/utils/retries";
@@ -57,13 +60,27 @@ export default function RedirectTo(props: RedirectToPropsType) {
 
   return (
     <StyledRedirectTo>
+      <StyledForm method="POST" action={"/api/redirect/" + props.id}>
       <h2>
-        This URL has been secured with password, please enter your password:
+        <LockIcon /> Locked
       </h2>
-      <form method="POST" action={"/api/redirect/" + props.id}>
-        {props.retries_left && (
-          <p> {props.retries_left} tries left </p>
-        )}
+        <StyledInfoContainer>
+          {props.retries_left && (
+            <div title={"You will be locked after " + props.retries_left + " failed attempts"}>
+              <p>
+                <RepeatOnIcon /> {props.retries_left}/3 left{" "}
+              </p>
+            </div>
+          )}
+
+          {leftTime > 0 && (
+            <div title={"You will be able to retry after " + leftTime + " seconds..."}>
+              <LockClock />
+              <p>{leftTime}s</p>
+            </div>
+          )}
+        </StyledInfoContainer>
+
         <FormItemWrapper>
           <Input
             disabled={leftTime > 0}
@@ -94,13 +111,13 @@ export default function RedirectTo(props: RedirectToPropsType) {
             </Button>
 
             {/* POST */}
-            <Button>
+            <Button active={!(leftTime > 0)}>
               <ArrowRightAlt />
             </Button>
           </PasswordButtonsContainer>
           <label className="label" htmlFor="password">
             {" "}
-            Password{" "}
+            Enter Password{" "}
           </label>
         </FormItemWrapper>
         <FormItemWrapper>
@@ -115,16 +132,34 @@ export default function RedirectTo(props: RedirectToPropsType) {
             />
           </label>
         </FormItemWrapper>
-        {leftTime > 0 && (
-          <p>
-            Too many failed treis. Please, wait {leftTime} seconds before trying
-            again...
-          </p>
-        )}
-      </form>
+
+      </StyledForm>
     </StyledRedirectTo>
   );
 }
+
+const StyledForm = styled.form`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--padding-big);
+  & input {
+    border-radius: var(--padding-big);
+  box-shadow: ${ ({theme}) => theme.shadow.secondary };
+
+  };
+  box-shadow: ${ ({theme}) => theme.shadow.secondary };
+  padding: var(--padding-big);
+  border-radius: var(--padding-big);
+`
+
+const StyledInfoContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  width: 80%;
+`;
 
 const PasswordButtonsContainer = styled.div`
   display: flex;
@@ -147,13 +182,13 @@ const StyledRedirectTo = styled.section`
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   let dest_id = context.query.from_url;
 
-  if ( !dest_id || ( typeof(dest_id) == "object" && dest_id.length > 1) ) {
+  if (!dest_id || (typeof dest_id == "object" && dest_id.length > 1)) {
     console.log("1>>>");
-    
+
     return {
       notFound: true,
-    }
-  };
+    };
+  }
 
   dest_id = dest_id[0];
 
@@ -190,8 +225,8 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
           redirect: {
             destination: doc.to_url,
             permanent: false,
-          }
-        }
+          },
+        };
       }
 
       const retryObject = getRetryObject(user, doc.urlid);

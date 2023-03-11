@@ -20,7 +20,7 @@ export interface Retry_Interface {
 export interface USER_INTERFACE {
     uid: string,
     registered: boolean,
-    urls: string[],
+    urls: Array<string>,
     secret?: string,
     name?: string,
     email?: string,
@@ -37,10 +37,7 @@ const UserSchema = new Schema<USER_INTERFACE>({
         type: Boolean,
         required: true,
     },
-    urls: {
-        type: Array<String>,
-        required: true,
-    },
+    urls: Array<String>,
     secret: String,
     name: String,
     email: String,
