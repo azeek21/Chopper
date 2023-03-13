@@ -7,6 +7,7 @@ import Cookie from "@/components/cookie-popup";
 import { useEffect, useState } from "react";
 import { getCookie } from "@/utils/cookie";
 import { QueryClient, QueryClientProvider } from "react-query";
+import Footer from "@/components/footer";
 
 const Qclient = new QueryClient();
 
@@ -29,6 +30,7 @@ export default function App({ Component, pageProps }: AppProps) {
           <Header />
           <Component {...pageProps} />
           {popup && <Cookie />}
+          <Footer />
       </ThemeProvider>
       </QueryClientProvider>
     </>

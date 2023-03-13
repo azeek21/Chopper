@@ -98,7 +98,7 @@ export default function CreationForm() {
             <span>
                 <Link />
             </span>
-                <label className="label" htmlFor="urlinput" >Url: https://example.com/your-site </label>
+                <label className="label" htmlFor="urlinput" title="Any valid url">https://example.com/ </label>
             <LoadingOverlay loading={loading}>
                 <CreateButton active={true}>
                     CREATE

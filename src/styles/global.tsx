@@ -50,10 +50,10 @@ html {
 body {
   position: relative;
   margin: 0;
-  padding: 0px;
+  padding: 0 0 10rem 0;
   overflow-x: hidden;
   min-height: 100vh;
-  height: 100vh;
+  height: auto;
   text-rendering: optimizeSpeed;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   font-size: 1rem;
@@ -75,7 +75,7 @@ body::before{
   left: 0;
   height: 100%;
   width: 100%;
-  background-color: rgba(255,255,255,0.1);
+  background-color: rgba(255,255,255,0.2);
   backdrop-filter: blur(3px);
   z-index: -99;
 }
@@ -217,5 +217,28 @@ input:not(:placeholder-shown) ~ .label{
   color: ${({theme})=> theme.textColor.primary};
 };
 
+@media (max-width: 1250px) {
+  body {
+    background-size: 60%;
+  }
+}
+
+@media (max-width: 997px) {
+  body {
+    background-size: 70%;
+  }
+}
+
+@media (max-width: 718px) {
+  body {
+    background-size: 80%;
+  }
+}
+
+@media (max-width: 550px) {
+  body {
+    background-size: 90%;
+  }
+}
 
 `

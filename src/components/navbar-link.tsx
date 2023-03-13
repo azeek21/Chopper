@@ -2,15 +2,18 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import styled, { ThemedStyledProps } from "styled-components";
 import { THEME_TYPE } from "@/styles/theme/theme";
+import { ReactComponentElement } from "react";
 
 export default function NavbarLink({
   href,
   name,
   clickHandler,
+  Icon,
 }: {
   href: string;
   name: string;
   clickHandler?: () => void;
+  Icon?: React.FC
 }) {
   const router = useRouter();
 
@@ -27,8 +30,8 @@ export default function NavbarLink({
           }
         }}
       >
-        {" "}
-        {name}{" "}
+        {Icon ? <Icon /> : ""}
+        <p>{name}</p>
       </Link>
     </StyledNavbarLink>
   );
@@ -38,7 +41,14 @@ const StyledNavbarLink = styled.li<{
   theme: THEME_TYPE;
   active: boolean;
 }>`
+  padding: 0;
+  margin: 0;
+  font-size: var(--fs-normal);
   & a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--padding-small);
     padding: var(--padding-small) var(--padding-normal);
     border-radius: 5rem;
     color: ${(props) =>
@@ -54,4 +64,13 @@ const StyledNavbarLink = styled.li<{
       box-shadow: ${({ theme }) => theme.shadow.primary};
     }
   }
+
+  @media (max-width: 550px) {
+    & {
+      font-size: var(--fs-sm);
+      p {
+        display: none;
+      }
+    }
+}
 `;

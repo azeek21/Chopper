@@ -20,7 +20,7 @@ const StyledHeader = styled.header`
     right: 0;
     /* background-color: ${({theme}) => theme.backgroundColor.primary}; */
     color: ${({theme}) => theme.textColor.primary};
-    padding: var(--padding-big);
+    padding: var(--padding-normal);
     box-shadow: ${({ theme }) => theme.shadow.primary};
     display: flex;
     align-items: center;

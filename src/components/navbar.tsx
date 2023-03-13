@@ -5,6 +5,7 @@ import LoadingOverlay from "./loading-overlay";
 // import { getSession, signIn, signOut, useSession } from "next-auth/react";
 import NavbarLink from "./navbar-link";
 import { useEffect, useState } from "react";
+import { Home, NotificationsActive, PostAdd } from "@mui/icons-material";
 
 export default function Navbar() {
 //   const { data: session, status: sessionStatus } = useSession();
@@ -13,9 +14,9 @@ export default function Navbar() {
   return (
     <nav>
       <StyledNavbar>
-        <NavbarLink href="/" name="HOME" />
-        <NavbarLink href="/dashboard" name="DASHBOARD" />
-        <NavbarLink href="/news" name="NEWS" />
+        <NavbarLink Icon={Home} href="/" name="HOME" />
+        <NavbarLink Icon={PostAdd}  href="/dashboard" name="DASHBOARD" />
+        <NavbarLink Icon={NotificationsActive}  href="/news" name="NEWS" />
 
         {/* SINGIN */}
         {/* {SESstatus === "loading" || SESstatus === "unauthenticated" || loading ? (
@@ -59,4 +60,9 @@ const StyledNavbar = styled.ul`
   align-items: center;
   justify-content: flex-start;
   gap: var(--padding-gigant);
+  @media (max-width: 550px) {
+    & {
+      gap: var(--padding-normal)
+    }
+}
 `;

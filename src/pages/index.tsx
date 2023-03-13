@@ -97,6 +97,17 @@ const HomeTitle = styled(Title)`
   line-height: normal;
   color: ${({ theme }) => theme.textColor.primary};
   max-width: 50%;
+  @media (max-width: 997px) {
+    & {
+      max-width: 80%;
+    }
+  }
+
+  @media (max-width: 550px) {
+    & {
+      font-size: var(--fs-2xl);
+    }
+}  
 `;
 
 const Nefor = styled.div`
@@ -108,6 +119,18 @@ const Nefor = styled.div`
   -webkit-text-fill-color: transparent;
   transition: 300ms ease-out;
   min-height: 120%;
+
+  @media (max-width: 718px) {
+    & {
+      font-size: var(--fs-3xl);
+    }
+}
+
+@media (max-width: 550px) {
+    & {
+      font-size: var(--fs-2xl);
+    }
+}
 `;
 
 const HomeText = styled.p`
@@ -116,6 +139,11 @@ const HomeText = styled.p`
   line-height: normal;
   letter-spacing: 0.05rem;
   max-width: 50%;
+  @media (max-width: 997px) {
+    & {
+      max-width: 80%;
+    } 
+  }
 `;
 
 const StyledHome = styled.section`
@@ -143,8 +171,14 @@ const ContentWrapper = styled.div`
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  width: 50%;
+  max-width: 50%;
   flex-direction: column;
   height: auto;
   gap: var(--padding-small);
+  @media (max-width: 997px) {
+    & {
+      max-width: 80%;
+      width: 80%;
+    } 
+  }
 `;

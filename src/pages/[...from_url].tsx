@@ -46,12 +46,15 @@ export default function RedirectTo(props: RedirectToPropsType) {
 
   useEffect(() => {
     // cooldown timer countdown
+    let i = leftTime;
     if (leftTime) {
       const leftTimeTimeout = setInterval(() => {
-        if (leftTime >= 0) {
-          setLeftTime((old) => old - 1);
+        if (i >= 0) {
+          i--;
+          setLeftTime(i);
+          console.log(i);
         } else {
-          clearInterval(leftTimeTimeout);
+          clearInterval(i);
           setLeftTime(0);
         }
       }, 1000);
@@ -60,7 +63,7 @@ export default function RedirectTo(props: RedirectToPropsType) {
 
   return (
     <StyledRedirectTo>
-      <StyledForm method="POST" action={"/api/redirect/" + props.id}>
+      <StyledForm method="POST" action={"/api/redirect/" + props.id} disabled={leftTime > 0}>
       <h2>
         <LockIcon /> Locked
       </h2>
@@ -138,7 +141,8 @@ export default function RedirectTo(props: RedirectToPropsType) {
   );
 }
 
-const StyledForm = styled.form`
+const StyledForm = styled.form<{disabled?: Boolean}>`
+  background-color: rgba(28, 0, 33, 0.7);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -147,11 +151,11 @@ const StyledForm = styled.form`
   & input {
     border-radius: var(--padding-big);
   box-shadow: ${ ({theme}) => theme.shadow.secondary };
-
   };
-  box-shadow: ${ ({theme}) => theme.shadow.secondary };
+  box-shadow: ${ ({theme}) => theme.shadow.primary };
   padding: var(--padding-big);
   border-radius: var(--padding-big);
+  ${ ({disabled}) => disabled ? "border: 0.15rem solid rgba(160, 0, 0, 1)" : ""}
 `
 
 const StyledInfoContainer = styled.div`
@@ -169,7 +173,6 @@ const PasswordButtonsContainer = styled.div`
 `;
 
 const StyledRedirectTo = styled.section`
-  background-color: rgb(28, 0, 33);
   min-height: 100vh;
   color: white;
   padding-top: 5rem;

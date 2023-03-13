@@ -28,12 +28,18 @@ const Input = styled.input`
     &:focus ~ span {
     transform: translateY(0) rotateZ(-45deg); 
     }
+
     &:not(:placeholder-shown) ~ span {
         transform: translateY(0) rotateZ(-45deg);
     }
 
     &:not(:placeholder-shown) ~ div {
         transform: translate(10%, -50%);
+    }
+    @media (max-width: 550px) {
+        &:not(:placeholder-shown) ~ div {
+        transform: translate(-50%, -50%);
+    }   
     }
 
 `
