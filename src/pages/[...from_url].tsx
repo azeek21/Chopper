@@ -173,7 +173,6 @@ const PasswordButtonsContainer = styled.div`
 `;
 
 const StyledRedirectTo = styled.section`
-  min-height: 100vh;
   color: white;
   padding-top: 5rem;
   display: flex;
