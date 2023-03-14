@@ -20,7 +20,7 @@ export default function NavbarLink({
   const my_path = router.asPath;
 
   return (
-    <StyledNavbarLink active={href === my_path}>
+    <StyledNavbarLink active={href === my_path} title={`Got to ${name}`}>
       <Link
         href={href}
         onClick={(ev) => {

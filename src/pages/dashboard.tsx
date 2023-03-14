@@ -53,5 +53,5 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
 const StyledDashboard = styled.section`
   margin: auto auto auto auto;
-  padding-top: 5rem;
+  padding: 5rem var(--padding-normal) var(--padding-normal) var(--padding-normal);
 `;

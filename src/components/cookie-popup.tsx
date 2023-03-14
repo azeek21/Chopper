@@ -68,9 +68,10 @@ const CookieText = styled.p`
 `
 
 const StyledCookie = styled.div`
-    height: 7rem;
-    width: 60%;
-    bottom: 2rem;
+    height: auto;
+    width: auto;
+    min-width: 50%;
+    top: 50%;
     overflow: hidden;
     position: fixed;
     left: 50%;
@@ -78,9 +79,11 @@ const StyledCookie = styled.div`
     backdrop-filter: blur(3px);
     margin: 0 auto;
     padding: var(--padding-big);
-    box-shadow: ${({theme}) => theme.shadow.purple};
+    box-shadow: ${({theme}) => theme.shadow.primary};
+    border: 0.1rem solid ${ ({theme}) => theme.backgroundColor.pink};
     animation: ${PopupAnimation} 2s ease-out 1;
     border-radius: var(--padding-gigant);
+    z-index: 999999;
 `
 
 const ButtonContainer = styled.div`

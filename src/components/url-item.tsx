@@ -20,7 +20,7 @@ import styled from "styled-components";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import LoadingOverlay from "./loading-overlay";
 import dayjs from "dayjs";
-import customParseFormat from "dayjs/plugin/customParseFormat"
+import customParseFormat from "dayjs/plugin/customParseFormat";
 dayjs.extend(customParseFormat);
 
 const initialDeleteContext = {
@@ -29,21 +29,23 @@ const initialDeleteContext = {
   discard: () => {},
 };
 
-const DeleteContainer = styled.div<{active: boolean}>`
+const DeleteContainer = styled.div<{ active: boolean }>`
   display: flex;
   align-items: flex-end;
   justify-content: flex-end;
-  color: ${ ({ active }) => active ? "red" : "inherit"};
+  color: ${({ active }) => (active ? "red" : "inherit")};
   font-size: 100%;
   svg {
     font-size: 90%;
   }
 `;
 
-
 export default function UrlItem({ url }: { url: any }) {
   const [loading, setLoading] = useState(false);
-  const [form, setForm] = useState({...url, timeout: url.timeout ? dayjs.unix(url.timeout).format("YYYY-MM-DD") : ""});
+  const [form, setForm] = useState({
+    ...url,
+    timeout: url.timeout ? dayjs.unix(url.timeout).format("YYYY-MM-DD") : "",
+  });
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [copied, setCopied] = useState(false);
   const [editing, setEditing] = useState(false);
@@ -60,9 +62,11 @@ export default function UrlItem({ url }: { url: any }) {
         return null;
       }
       console.log(newUrl.timeout);
-      newUrl.timeout = newUrl.timeout ? dayjs.unix(newUrl.timeout).format("YYYY-MM-DD") : "";
+      newUrl.timeout = newUrl.timeout
+        ? dayjs.unix(newUrl.timeout).format("YYYY-MM-DD")
+        : "";
       console.log(newUrl.timeout);
-      
+
       return newUrl;
     },
     {
@@ -167,7 +171,12 @@ export default function UrlItem({ url }: { url: any }) {
   };
 
   const Copy = () => {
-    navigator.clipboard.writeText(url.url);
+    try {
+      navigator.clipboard.writeText(url.url);
+    } catch (error) {
+      alert("Failed to copy to clipboard, Plase try to copy the URL manually.");
+      return;
+    }
     setCopied(true);
     setTimeout(() => {
       setCopied(false);
@@ -189,27 +198,25 @@ export default function UrlItem({ url }: { url: any }) {
     >
       <LoadingOverlay loading={loading || isLoading}>
         <StyledUrlItem>
-          <CopyField
+          <CopyField className="url__item__copy"
             title={`Copy ${url.url} to Clipboard`}
-            onClick={() => {
-              Copy();
-            }}
           >
-            <CopyButton
-              active={true}
+            <button
+              // active={true}
+              type="button"
               onClick={() => {
                 Copy();
               }}
               title={`Copy ${url.url} to Clipboard`}
-              style={{ color: copied ? "#0dff00" : "white" }}
+              style={{ color: copied ? "#0dff00" : "gray" }}
             >
               <ContentCopy color="inherit" />
-            </CopyButton>
+            </button>
             <h3>{url.url}</h3>
           </CopyField>
           {/* PASSWORD INPUT */}
 
-          <UrlItemWrapper>
+          <UrlItemWrapper className="url__item__password">
             <Input
               disabled={!editing}
               id={url.urlid + "password"}
@@ -233,17 +240,16 @@ export default function UrlItem({ url }: { url: any }) {
               }}
             >
               <Button type="button">
-                {passwordVisible ? <Visibility /> : <VisibilityOff />}
+                {passwordVisible ? <Visibility fontSize="inherit"/> : <VisibilityOff fontSize="inherit"/>}
               </Button>
             </div>
             <label className="label" htmlFor={url.urlid + "password"}>
-              {" "}
-              Password{" "}
+              {form.password ? "Password" : "No Password"}
             </label>
           </UrlItemWrapper>
 
           {/* LIMIT INPUT */}
-          <UrlItemWrapper>
+          <UrlItemWrapper className="url__item__limit">
             <Input
               disabled={!editing}
               type={"number"}
@@ -257,8 +263,7 @@ export default function UrlItem({ url }: { url: any }) {
             />
             <div></div>
             <label className="label" htmlFor={url.urlid + "limit"}>
-              {" "}
-              Limit (number){" "}
+              {form.limit ? "Limited to" : "Unlimited"}
             </label>
             <span>
               {" "}
@@ -267,7 +272,7 @@ export default function UrlItem({ url }: { url: any }) {
           </UrlItemWrapper>
 
           {/* TIMEOUT INPUT */}
-          <UrlItemWrapper>
+          <UrlItemWrapper className="url__item__timeout">
             <Input
               disabled={!editing}
               type={"date"}
@@ -280,8 +285,7 @@ export default function UrlItem({ url }: { url: any }) {
             />
             <div></div>
             <label className="label" htmlFor={url.urlid + "timeout"}>
-              {" "}
-              Expiration Date{" "}
+              {form.timeout ? "Expires at" : "Permanent"}
             </label>
             <span>
               {" "}
@@ -290,7 +294,7 @@ export default function UrlItem({ url }: { url: any }) {
           </UrlItemWrapper>
 
           {/* CONTROLS HERE */}
-          <Controls>
+          <Controls className="url__item__controller">
             {/* EDITc BUTTON */}
 
             {!deleteContext.deleting && (
@@ -314,36 +318,88 @@ export default function UrlItem({ url }: { url: any }) {
                 }
               }}
             >
-              {deleteContext.deleting ? <Undo /> : <DeleteIcon />}
+              {deleteContext.deleting ? <Undo fontSize="small" /> : <DeleteIcon fontSize="small" />}
               {deleteContext.deleting && (
                 <DeleteContainer active={deleteContext.time_left < 3}>
                   <p>{deleteContext.time_left}</p>
-                  <Timelapse />
+                  <Timelapse fontSize="small" />
                 </DeleteContainer>
               )}
             </Button>
           </Controls>
+    
         </StyledUrlItem>
       </LoadingOverlay>
     </form>
   );
 }
 
-
 const StyledUrlItem = styled.div`
+  span {
+    font-size: inherit;
+  }
+  svg {
+    font-size: 120%;
+  }
+  & input, label {
+    font-size: var(--fs-l);
+  }
   width: 100%;
   display: grid;
-  grid-template-columns: 1.3fr 1fr 0.6fr 0.7fr 0.3fr;
+  grid-template-columns: 1.4fr 1.3fr 0.9fr 1fr 0.4fr;
   grid-gap: var(--padding-gigant);
   align-content: center;
-  justify-content: center;
   align-items: center;
-  justify-items: center;
+  justify-items: end;
   padding: var(--padding-normal);
   color: ${({ theme }) => theme.textColor.purple};
   box-shadow: ${({ theme }) => theme.shadow.primary};
   border-radius: var(--padding-normal);
+  font-size: var(--fs-xl);
+  
+  @media (max-width: 997px) {
+    grid-gap: var(--padding-normal);
+    font-size: var(--fs-l);
+  input {
+    padding-left: var(--padding-gigant);
+  }
+  & input, label {
+    font-size: var(--fs-normal);
+  }
+  }
+
+  @media (max-width: 805px) {
+
+  & .url__item__copy {
+    grid-area: copier;
+  }
+
+& .url__item__password {
+    grid-area: password;
+    justify-self: center;
+  }
+  & .url__item__limit {
+    grid-area: limit;
+  }
+  & .url__item__timeout {
+    grid-area: timeout;
+  }
+  & .url__item__controller {
+    grid-area: controls;
+  }
+  grid-template-areas: 'copier password password password controls' ' limit limit timeout timeout timeout';
+  }
+
+  @media (max-width: 550px) {
+    font-size: var(--fs-normal);
+  & input, label {
+    font-size: var(--fs-sm);
+  }
+  grid-template-areas: 'copier copier copier copier controls' ' password password password password password' 'limit limit timeout timeout timeout';
+  }
 `;
+
+
 
 const CopyButton = styled(Button)`
   height: 80%;
@@ -352,6 +408,7 @@ const CopyButton = styled(Button)`
 const UrlItemWrapper = styled(FormItemWrapper)`
   width: 100%;
   min-width: auto;
+  height: 100%;
   div {
     position: absolute;
     left: 100%;
@@ -363,8 +420,7 @@ const UrlItemWrapper = styled(FormItemWrapper)`
     &:not(:placeholder-shown) ~ div {
       transform: translate(-110%, -50%);
     }
-  }
-  height: 100%;
+  }  
 `;
 
 const CopyField = styled.div`

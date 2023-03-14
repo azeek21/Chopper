@@ -39,6 +39,7 @@ const Input = styled.input`
     @media (max-width: 550px) {
         &:not(:placeholder-shown) ~ div {
         transform: translate(-50%, -50%);
+        width: 90%;
     }   
     }
 

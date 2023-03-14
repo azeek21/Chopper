@@ -14,6 +14,7 @@ import Link from "next/link";
 import { useQuery } from "react-query";
 import LoadingOverlay from "@/components/loading-overlay";
 
+
 export default function Index() {
   const [copied, setCopied] = useState(false);
   const { data, isLoading, error } = useQuery(
@@ -32,6 +33,12 @@ export default function Index() {
     }
   );
 
+  const jokeQuery = useQuery("joke", async () => {
+    return (await fetch("https://v2.jokeapi.dev/joke/Programming,Miscellaneous,Pun,Spooky?blacklistFlags=religious&format=txt")).text()
+  }, {
+    initialData: "Test Data here",
+  })
+
   useEffect(() => {
     setTimeout(() => {
       typeWriter();
@@ -40,7 +47,7 @@ export default function Index() {
 
   return (
     <StyledHome>
-      <RoundButton title="Send me a start in github">
+      <RoundButton title={(jokeQuery.data && !jokeQuery.error) ? jokeQuery.data : ""}>
         <Link href="https://github.com/azeek21/url_shortener_practice">
           <Grade />
         </Link>
@@ -90,6 +97,7 @@ const Copyable = styled.h3<{ copied?: boolean | unknown }>`
   border-radius: var(--padding-normal);
   border: 0.2rem solid transparent;
   border-color: ${(props) => (props.copied ? "#00ff2f" : "transparent")};
+  font-size: inherit;
 `;
 
 const HomeTitle = styled(Title)`
@@ -104,9 +112,8 @@ const HomeTitle = styled(Title)`
   }
 
   @media (max-width: 550px) {
-    & {
-      font-size: var(--fs-2xl);
-    }
+    font-size: var(--fs-2xl);
+    max-width: 90%;
 }  
 `;
 
@@ -121,15 +128,11 @@ const Nefor = styled.div`
   min-height: 120%;
 
   @media (max-width: 718px) {
-    & {
       font-size: var(--fs-3xl);
-    }
 }
 
 @media (max-width: 550px) {
-    & {
       font-size: var(--fs-2xl);
-    }
 }
 `;
 
@@ -140,9 +143,10 @@ const HomeText = styled.p`
   letter-spacing: 0.05rem;
   max-width: 50%;
   @media (max-width: 997px) {
-    & {
       max-width: 80%;
-    } 
+  }
+  @media (max-width: 550px) {
+    max-width: 90%;
   }
 `;
 
@@ -152,6 +156,10 @@ const StyledHome = styled.section`
   align-items: flex-start;
   justify-content: center;
   gap: var(--padding-gigant);
+  @media (max-width: 550px) {
+    padding: 5rem 0 1rem 1rem;
+    text-align: center;
+  }
 `;
 
 const RoundButton = styled(Button)`
@@ -167,6 +175,7 @@ const RoundButton = styled(Button)`
 `;
 
 const ContentWrapper = styled.div`
+font-size: var(--fs-xl);
   padding: 0;
   display: flex;
   align-items: flex-start;
@@ -175,10 +184,14 @@ const ContentWrapper = styled.div`
   flex-direction: column;
   height: auto;
   gap: var(--padding-small);
+
   @media (max-width: 997px) {
-    & {
       max-width: 80%;
       width: 80%;
-    } 
   }
+  @media (max-width: 550px) {
+    width: 100%;
+    font-size: var(--fs-normal);
+  }
+  
 `;

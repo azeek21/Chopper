@@ -11,6 +11,9 @@ const Button  = styled.button<{active?: boolean | unknown}>`
     border-radius: var(--padding-normal);
     border: 0.1rem solid ${ ({theme}) => theme.backgroundColor.secondary};
     background-image: ${ (props) => props.active ? "linear-gradient(90deg, #810094, #fb457f)" : "none"};
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
     color: ${ (props) => props.active ? "white" : props.theme.textColor.primary};
     font-weight: ${  (props) => props.active ? "500" : "400"};
     color: white;

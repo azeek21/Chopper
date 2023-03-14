@@ -81,7 +81,6 @@ export default function CreationForm() {
     return (
         <div style={{
             display: 'flex',
-            width: "60%",
             marginTop: "2rem",
             marginBottom: "2rem"
         }}>
@@ -107,7 +106,7 @@ export default function CreationForm() {
             </FormItemWrapper>
 
             
-            { (hasCookies && form.to_url.length > 0 || expanded) &&
+            { (form.to_url.length > 0 || expanded) &&
                 <Button type="button" onClick={() => {setExpanded(expanded => !expanded)}}>
                     {expanded ? <ExpandLess/> : <ExpandMore />}
                 </Button>
@@ -194,6 +193,9 @@ width: 100%;
         font-size: var(--fs-xsm);
         color: ${ ({theme}) => theme.textColor.secondary}
     }
+    @media (max-width: 550px) {
+    min-width: 100%;
+    }
 
 `
 
@@ -208,6 +210,11 @@ const CreateButton = styled(Button)`
     &:hover{
         text-shadow: 0.03rem 0.03rem 0.3rem whitesmoke;
         box-shadow: ${({theme}) => theme.shadow.primary};
+    }
+
+    @media (max-width: 550px) {
+        font-size: inherit;
+        padding: var(--padding-big) var(--padding-normal);
     }
 `
 

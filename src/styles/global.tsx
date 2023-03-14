@@ -50,7 +50,7 @@ html {
 body {
   position: relative;
   margin: 0;
-  padding: 0 0 10rem 0;
+  padding: 0 0 14rem 0;
   overflow-x: hidden;
   min-height: 100vh;
   height: auto;

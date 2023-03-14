@@ -6,7 +6,10 @@ import {
   EmailOutlined,
   EmailRounded,
   Telegram,
+  StarOutline,
+  WhatsApp,
 } from "@mui/icons-material";
+import Button from "./button";
 
 export default function Footer() {
   return (
@@ -18,33 +21,41 @@ export default function Footer() {
           </h3>
         </li>
         <li>
-          <p>Star on GitHub</p> <GitHub />
+          <a
+            href="https://github.com/azeek21/url_shortener_practice"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Button style={{padding: "3px 5px", border: "0.1rem solid gray"}} > <StarOutline fontSize="small" /> Star</Button> on GitHub <GitHub />
+          </a>
         </li>
         <li>
-          <p>Contacts:</p>
+          <p>Contacts</p>
         </li>
         <li>
           <ContentWrapper>
-            <EmailRounded />{" "}
             <a target="_blank" href="mailto:akraliev0516@gmail.com">
-              {" "}
-              askaraliev0516@gmail.com
+              <EmailRounded /> askaraliev0516@gmail.com
             </a>
           </ContentWrapper>
           <ContentWrapper>
-            <Telegram />{" "}
             <a target="_blank" href="https://t.me/foffnow">
-              @foffnow
+              <Telegram /> @foffnow
+            </a>
+          </ContentWrapper>
+          <ContentWrapper >
+            <a href="https://wa.me/79032120900/?text=Hey,%20I%20love%20your%20URL%20shortener%20project.%0A" target="_blank" rel="noopener noreferrer">
+              <WhatsApp />
+              Send Message
             </a>
           </ContentWrapper>
           <ContentWrapper>
-            <GitHub />{" "}
             <a
               href="https://github.com/azeek21"
               target="_blank"
               rel="noopener noreferrer"
             >
-              azeek21
+              <GitHub /> azeek21
             </a>
           </ContentWrapper>
         </li>
@@ -88,12 +99,15 @@ const StyledFooter = styled.footer`
   & a {
     color: inherit;
     text-decoration: none;
+    display: flex;
+    gap: var(--padding-small);
+    align-items: center;
   }
   & li {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: var(--padding-normal);
+    gap: var(--padding-gigant);
     flex-wrap: wrap;
   }
 `;
