@@ -8,7 +8,7 @@ let THEME = {
             pink: "#fb457f",
         },
         textColor: {
-            primary: "rgb(45, 45, 45)",
+            primary: "rgb(49, 0, 58)",
             secondary: "rgba(45, 0, 45, 0.6)",
             tertiary: "rgb(130, 255, 180)",
             purple: "#810094",

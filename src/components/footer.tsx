@@ -102,6 +102,9 @@ const StyledFooter = styled.footer`
     display: flex;
     gap: var(--padding-small);
     align-items: center;
+    &:hover {
+      color: white;
+    }
   }
   & li {
     display: flex;

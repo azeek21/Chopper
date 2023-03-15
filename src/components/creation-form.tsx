@@ -193,9 +193,6 @@ width: 100%;
         font-size: var(--fs-xsm);
         color: ${ ({theme}) => theme.textColor.secondary}
     }
-    @media (max-width: 550px) {
-    min-width: 100%;
-    }
 
 `
 

@@ -36,7 +36,8 @@ export default function Index() {
   const jokeQuery = useQuery("joke", async () => {
     return (await fetch("https://v2.jokeapi.dev/joke/Programming,Miscellaneous,Pun,Spooky?blacklistFlags=religious&format=txt")).text()
   }, {
-    initialData: "Test Data here",
+    initialData: "Why don't chickens come to my site ? \nCuz they don't like it short!",
+    refetchInterval: 30000,
   })
 
   useEffect(() => {
@@ -72,7 +73,7 @@ export default function Index() {
             >
               <ContentCopy />
             </Button>
-            {data.url}{" "}
+            <h4>{data.url}</h4>
             <Button>
             <Link href={"/dashboard"} style={{color: "inherit"}}>
               <ReadMore color={"inherit"}/>
@@ -98,6 +99,10 @@ const Copyable = styled.h3<{ copied?: boolean | unknown }>`
   border: 0.2rem solid transparent;
   border-color: ${(props) => (props.copied ? "#00ff2f" : "transparent")};
   font-size: inherit;
+  & h4 {
+    -webkit-user-select: all;
+    user-select: all;
+  }
 `;
 
 const HomeTitle = styled(Title)`
@@ -113,7 +118,7 @@ const HomeTitle = styled(Title)`
 
   @media (max-width: 550px) {
     font-size: var(--fs-2xl);
-    max-width: 90%;
+    max-width: 100%;
 }  
 `;
 
@@ -125,7 +130,7 @@ const Nefor = styled.div`
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   transition: 300ms ease-out;
-  min-height: 120%;
+  min-height: 130%;
 
   @media (max-width: 718px) {
       font-size: var(--fs-3xl);
@@ -133,6 +138,8 @@ const Nefor = styled.div`
 
 @media (max-width: 550px) {
       font-size: var(--fs-2xl);
+      text-align: center;
+      align-self: center;
 }
 `;
 
@@ -146,7 +153,7 @@ const HomeText = styled.p`
       max-width: 80%;
   }
   @media (max-width: 550px) {
-    max-width: 90%;
+    max-width: 100%;
   }
 `;
 

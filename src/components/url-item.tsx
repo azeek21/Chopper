@@ -430,6 +430,10 @@ const CopyField = styled.div`
   gap: var(--padding-normal);
   height: 100%;
   width: 100%;
+  & h3 {
+    -webkit-user-select: all;
+    user-select: all;
+  }
 `;
 
 const Controls = styled.div`

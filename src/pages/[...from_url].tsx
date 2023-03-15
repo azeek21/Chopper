@@ -156,6 +156,9 @@ const StyledForm = styled.form<{disabled?: Boolean}>`
   padding: var(--padding-big);
   border-radius: var(--padding-big);
   ${ ({disabled}) => disabled ? "border: 0.15rem solid rgba(160, 0, 0, 1)" : ""}
+  @media (max-width: 550px) {
+    font-size: 90%;
+  }
 `
 
 const StyledInfoContainer = styled.div`
@@ -170,6 +173,12 @@ const PasswordButtonsContainer = styled.div`
   align-items: center;
   justify-content: flex-start;
   gap: var(--padding-normal);
+  @media (max-width: 550px) {
+    gap: var(--padding-small);
+    svg {
+      font-size: 120%;
+    }
+  }
 `;
 
 const StyledRedirectTo = styled.section`
