@@ -14,7 +14,6 @@ import Link from "next/link";
 import { useQuery } from "react-query";
 import LoadingOverlay from "@/components/loading-overlay";
 
-
 export default function Index() {
   const [copied, setCopied] = useState(false);
   const { data, isLoading, error } = useQuery(

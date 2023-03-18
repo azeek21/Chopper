@@ -1,25 +1,28 @@
 import styled from "styled-components";
 import LoadingOverlay from "./loading-overlay";
-// singin and signout with buttons
-// from nextauth 4.*, singIn and signOut methods are in 'next-auth/react` not in 'next-auth/client`
-// import { getSession, signIn, signOut, useSession } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 import NavbarLink from "./navbar-link";
 import { useEffect, useState } from "react";
 import { Home, NotificationsActive, PostAdd } from "@mui/icons-material";
 
 export default function Navbar() {
-//   const { data: session, status: sessionStatus } = useSession();
+  const { data: session, status: sessionStatus } = useSession();
   const [loading, SetLoading] = useState(false);
 
+  console.log("SESSION>>>");
+  console.log(session);
+  console.log(sessionStatus);
+  
+  
   return (
     <nav>
       <StyledNavbar>
         <NavbarLink Icon={Home} href="/" name="HOME" />
-        <NavbarLink Icon={PostAdd}  href="/dashboard" name="DASHBOARD" />
-        <NavbarLink Icon={NotificationsActive}  href="/news" name="NEWS" />
+        <NavbarLink Icon={PostAdd} href="/dashboard" name="DASHBOARD" />
+        <NavbarLink Icon={NotificationsActive} href="/news" name="NEWS" />
 
         {/* SINGIN */}
-        {/* {SESstatus === "loading" || SESstatus === "unauthenticated" || loading ? (
+        {sessionStatus === "loading" || sessionStatus === "unauthenticated" || loading ? (
           <LoadingOverlay loading={loading}>
             <NavbarLink
               href="/api/auth/signin"
@@ -33,10 +36,10 @@ export default function Navbar() {
           </LoadingOverlay>
         ) : (
           ""
-        )} */}
+        )}
 
         {/* SIGNOUT */}
-        {/* {SESstatus === "authenticated" ? (
+        {sessionStatus === "authenticated" ? (
           <LoadingOverlay loading={loading}>
             <NavbarLink
               href="/api/auth/signout"
@@ -49,7 +52,7 @@ export default function Navbar() {
           </LoadingOverlay>
         ) : (
           ""
-        )} */}
+        )}
       </StyledNavbar>
     </nav>
   );
@@ -62,7 +65,7 @@ const StyledNavbar = styled.ul`
   gap: var(--padding-gigant);
   @media (max-width: 550px) {
     & {
-      gap: var(--padding-normal)
+      gap: var(--padding-normal);
     }
-}
+  }
 `;

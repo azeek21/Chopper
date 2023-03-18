@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { getCookie } from "@/utils/cookie";
 import { QueryClient, QueryClientProvider } from "react-query";
 import Footer from "@/components/footer";
+import { SessionProvider } from 'next-auth/react';
 
 const Qclient = new QueryClient();
 
@@ -35,10 +36,14 @@ export default function App({ Component, pageProps }: AppProps) {
     };
 
     essentialCookie();
+
+    
+    
   }, []);
 
   return (
     <>
+    <SessionProvider session={pageProps.session}>
       <QueryClientProvider client={Qclient}>
         <ThemeProvider theme={THEME["light"]}>
           <GlobalStyle />
@@ -48,6 +53,7 @@ export default function App({ Component, pageProps }: AppProps) {
           <Footer />
         </ThemeProvider>
       </QueryClientProvider>
+      </SessionProvider>
     </>
   );
 }
