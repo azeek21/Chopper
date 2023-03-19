@@ -17,14 +17,16 @@ export default function App({ Component, pageProps }: AppProps) {
 
   useEffect(() => {
     // TODO: this will be login popup soon
-    setTimeout(() => {
-      if (!getCookie()) {
-        setPopup(true);
-      }
-    }, 10000);
+    // setTimeout(() => {
+    //   if (getCookie()?.noCookie) {
+    //     setPopup(true);
+    //   }
+    // }, 10000);
 
     const essentialCookie = async () => {
-      if (!getCookie()) {
+      if (getCookie()?.noCookie) {
+        console.log("NO COOKIE, ASKING ...");
+        
         try {
           const res = await (await fetch("/api/new-user")).json();
         } catch (error) {
@@ -36,8 +38,6 @@ export default function App({ Component, pageProps }: AppProps) {
     };
 
     essentialCookie();
-
-    
     
   }, []);
 

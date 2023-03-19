@@ -8,8 +8,6 @@ import generateUserCookies from "@/utils/generate-user-cookies";
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const cookies = req.cookies;
 
-    console.log(cookies);
-    
     if (!cookies['weak-uid']) {
         await mongoClient();
         const user = await CreateUser();
@@ -17,7 +15,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         const userCookies = generateUserCookies(user);
 
-        res.setHeader("Set-Cookie", [userCookies.uid, userCookies.secret]);
+        res.setHeader("Set-Cookie", [userCookies.uid, userCookies.secret, userCookies.registered]);
     }
     return res.status(200).json({success: "ok"});
 };

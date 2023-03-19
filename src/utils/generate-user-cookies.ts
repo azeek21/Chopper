@@ -4,7 +4,8 @@ import dayjs from "dayjs";
 
 export default function generateUserCookies(user: USER_INTERFACE) {
     const expiration_date = dayjs().add(1, "year").toDate();
-
+    const infin = new Date();
+    infin.setFullYear(9999);
     const uid = serialize("weak-uid", user.uid, {
         path: "/",
         expires: expiration_date,
@@ -17,8 +18,14 @@ export default function generateUserCookies(user: USER_INTERFACE) {
         sameSite: true,
     });
 
+    const registered = serialize("weak-registered", "false", {
+        path: "/",
+        expires: infin,
+        sameSite: true,
+    })
     return {
         uid: uid,
         secret: secret,
+        registered,
     }
 };
