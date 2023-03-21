@@ -9,19 +9,19 @@ export default function generateUserCookies(user: USER_INTERFACE) {
     const uid = serialize("weak-uid", user.uid, {
         path: "/",
         expires: expiration_date,
-        sameSite: true,
+        sameSite: 'lax',
     })
 
     const secret = serialize("weak-secret", user.secret!, {
         path: "/",
         expires: expiration_date,
-        sameSite: true,
+        sameSite: "lax",
     });
 
     const registered = serialize("weak-registered", "false", {
         path: "/",
         expires: infin,
-        sameSite: true,
+        sameSite: "lax",
     })
     return {
         uid: uid,

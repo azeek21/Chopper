@@ -8,6 +8,8 @@ import mongoClient from "@/db/connect";
 import getUser from "@/db/get-user";
 import { HydratedDocument } from "mongoose";
 import { USER_INTERFACE } from "@/db/models/user-model";
+import { serialize } from "cookie";
+import dayjs from "dayjs";
 
 const max_age = "Fri, 31 Dec 9999 21:10:10 GMT";
 
@@ -55,18 +57,29 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
     clientSecret: process.env.GITHUB_SECRET!,
     async profile(profile, tokens) {
       console.log("WRITING USER TO DATABASE WITH PROFILE METHOD >>>");
+      console.log(req.cookies);
       console.log(profile);
       console.log(tokens);
 
-      // if (!req.cookies["weak-uid"]) {
-      //   console.log("SERVER: NO COOKIE... ASKING ....");
-      //   const _ = mongoClient();
-      //   const resp = await fetch("http://localhost:3000/api/new-user");
-      //   await _;
-      //   console.log(resp);
-      //   user = await getUser(req);
-      // }
-
+      if (req.cookies["weak-uid"]) {
+        console.log("REMOVING COOKIES >>>");
+        res.setHeader('Set-Cookie', [serialize('weak-uid', "", {
+          // expires: dayjs(0).toDate(),
+          maxAge: -1,
+          path: "/"
+        }), serialize('weak-secret', "", {
+          // expires: dayjs(0).toDate(),
+          maxAge: -1,
+          path: "/"
+        }), serialize('weak-registered', "true", {
+          expires: (dayjs().add(999, 'year')).toDate(),
+          sameSite: 'lax',
+          path: '/',
+        })])
+        // const _ = mongoClient();
+        // const resp = await fetch("http://localhost:3000/api/new-user");
+      }
+      
       return {
         // uid: user?.uid,
         // secret: user?.secret,

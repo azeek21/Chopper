@@ -24,6 +24,8 @@ export default function App({ Component, pageProps }: AppProps) {
     // }, 10000);
 
     const essentialCookie = async () => {
+      console.log('CHECKING COOKIE IN BROWSER >>>');
+      
       if (getCookie()?.noCookie && !pageProps.session) {
         console.log("NO COOKIE, ASKING ...");
         
