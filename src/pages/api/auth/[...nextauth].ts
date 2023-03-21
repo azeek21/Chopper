@@ -1,4 +1,9 @@
-import NextAuth, { AuthOptions, CallbacksOptions, NextAuthOptions, User } from "next-auth";
+import NextAuth, {
+  AuthOptions,
+  CallbacksOptions,
+  NextAuthOptions,
+  User,
+} from "next-auth";
 import GithubProvider from "next-auth/providers/github";
 import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
 import clientPromise from "@/lib/mongodb";
@@ -41,7 +46,7 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
       console.log(params);
       return params.token;
     },
-    session: async ({session, user, token}) => {
+    session: async ({ session, user, token }) => {
       console.log("CUSTOM authOPtions: SESSION REQUESTED >>>");
       console.log(session);
       console.log(user);
@@ -49,8 +54,7 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
 
       return session;
     },
-    
-  }
+  };
 
   const customGithubProvider = GithubProvider({
     clientId: process.env.GITHUB_CLIENT_ID!,
@@ -63,34 +67,42 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
 
       if (req.cookies["weak-uid"]) {
         console.log("REMOVING COOKIES >>>");
-        res.setHeader('Set-Cookie', [serialize('weak-uid', "", {
-          // expires: dayjs(0).toDate(),
-          maxAge: -1,
-          path: "/"
-        }), serialize('weak-secret', "", {
-          // expires: dayjs(0).toDate(),
-          maxAge: -1,
-          path: "/"
-        }), serialize('weak-registered', "true", {
-          expires: (dayjs().add(999, 'year')).toDate(),
-          sameSite: 'lax',
-          path: '/',
-        })])
-        // const _ = mongoClient();
-        // const resp = await fetch("http://localhost:3000/api/new-user");
+        await mongoClient();
+        user = await getUser(req);
+
+        // removing before-register cookies
+        res.setHeader("Set-Cookie", [
+          serialize("weak-uid", "", {
+            maxAge: -1,
+            path: "/",
+          }),
+          serialize("weak-secret", "", {
+            maxAge: -1,
+            path: "/",
+          }),
+          serialize("weak-registered", "true", {
+            expires: dayjs().add(999, "year").toDate(),
+            sameSite: "lax",
+            path: "/",
+          }),
+        ]);
+
+        if (user) {
+          console.log("USER EXISTS, COPYING DATA>>>");
+          user.registered = true;
+          user.email = profile.email || undefined;
+          user.name = profile.name || undefined;
+          await user.save();
+        };
       }
-      
+
       return {
-        // uid: user?.uid,
-        // secret: user?.secret,
-        // registered: true,
-        // urls: user?.urls,
-        // has_access_to: user?.has_access_to,
-        // retries: user?.retries,
         id: profile.id.toString(),
         email: profile.email,
         name: profile.name,
         custom: "FUCK YOU",
+        uid: user?.uid || null,
+        secret: user?.secret || null,
       };
     },
   });
