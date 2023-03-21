@@ -24,7 +24,7 @@ export default function App({ Component, pageProps }: AppProps) {
     // }, 10000);
 
     const essentialCookie = async () => {
-      if (getCookie()?.noCookie) {
+      if (getCookie()?.noCookie && !pageProps.session) {
         console.log("NO COOKIE, ASKING ...");
         
         try {
@@ -41,6 +41,9 @@ export default function App({ Component, pageProps }: AppProps) {
     
   }, []);
 
+  console.log("PAGEPROP SESSION >>>");
+  console.log(pageProps.session);
+  
   return (
     <>
     <SessionProvider session={pageProps.session}>

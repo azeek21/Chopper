@@ -16,21 +16,21 @@ import LoadingOverlay from "@/components/loading-overlay";
 
 export default function Index() {
   const [copied, setCopied] = useState(false);
-  const { data, isLoading, error } = useQuery(
-    "lastAdded",
-    async () => {
-      const lastUrl = await (await fetch("/api/urls/get/last")).json();
-      if (lastUrl.error) {
-        return null;
-      }
-      return lastUrl;
-    },
-    {
-      onSuccess: () => {
-        setCopied(false);
-      },
-    }
-  );
+  // const { data, isLoading, error } = useQuery(
+  //   "lastAdded",
+  //   async () => {
+  //     const lastUrl = await (await fetch("/api/urls/get/last")).json();
+  //     if (lastUrl.error) {
+  //       return null;
+  //     }
+  //     return lastUrl;
+  //   },
+  //   {
+  //     onSuccess: () => {
+  //       setCopied(false);
+  //     },
+  //   }
+  // );
 
   const jokeQuery = useQuery("joke", async () => {
     return (await fetch("https://v2.jokeapi.dev/joke/Programming,Miscellaneous,Pun,Spooky?blacklistFlags=religious&format=txt")).text()
@@ -60,7 +60,7 @@ export default function Index() {
         unique toilered experinece
       </HomeText>
       <ContentWrapper>
-      {data && !error && (
+      {/* {data && !error && (
         <LoadingOverlay loading={isLoading}>
           <Copyable copied={copied}>
             <Button
@@ -80,9 +80,12 @@ export default function Index() {
             </Button>
           </Copyable>
         </LoadingOverlay>
-      )}
+      )} */}
         <CreationForm />
       </ContentWrapper>
+      {
+        false ? <h1>Yes</h1> : null
+      }
     </StyledHome>
   );
 }
