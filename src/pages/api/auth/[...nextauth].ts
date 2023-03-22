@@ -56,8 +56,8 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
       if (session.user) {
         console.log("session: token>>> ");
         console.log(token);
-        session.user.uid = token.uid;
-        session.user.secret = token.secret;
+        session.user.uid = token.uid as string; 
+        session.user.secret = token.secret as string;
       }
 
       return session;
@@ -112,6 +112,7 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
         custom: "FUCK YOU",
         uid: user?.uid || null,
         secret: user?.secret || null,
+        image: profile.avatar_url,
       };
     },
   });

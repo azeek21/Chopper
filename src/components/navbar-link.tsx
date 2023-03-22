@@ -65,7 +65,7 @@ const StyledNavbarLink = styled.li<{
     }
   }
 
-  @media (max-width: 550px) {
+  @media (max-width: 600px) {
     & {
       font-size: var(--fs-sm);
       p {
