@@ -8,18 +8,24 @@ export default async function getUser(req: NextApiRequest) {
   const cookies = req.cookies;
   let uid: string | undefined;
   let secret: string | undefined;
+  let user = null;
   uid = cookies["weak-uid"];
   secret = cookies["weak-secret"];
+
   if (!uid) {
-    const session = await getSession();
+    console.log("GET USER: USER >>>");
+    const session = await getSession({req: req});
     uid = session?.user?.uid || undefined;
     secret = session?.user?.secret || undefined;
+    console.log(session);
+    console.log("-----------------");
+    
   }
 
   if (!uid || !secret) {
     return null;
   }
-  let user = null;
+
   try {
     user = await UserModel.findOne<HydratedDocument<USER_INTERFACE>>({
       uid: uid,

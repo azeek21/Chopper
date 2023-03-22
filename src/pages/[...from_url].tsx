@@ -223,7 +223,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
     // if url is password protected return password form;
     if (doc.password) {
-      const user = await getUser(context.req as NextApiRequest); // we only need cookies so I did req as NextApiRequest, Not recommended way;
+      const user = await getUser(context.req as NextApiRequest); // we only need cookies so it's ok.
       // check if user ever accessed url with remember me option turned on;
       if (!user) {
         return {

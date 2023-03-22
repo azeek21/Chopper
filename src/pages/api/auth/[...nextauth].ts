@@ -43,14 +43,22 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
   const customCallbacks: AuthOptions["callbacks"] = {
     jwt: async (params) => {
       console.log("CUSTOP authOptions: TOKE requested >>>");
-      console.log(params);
+      if (params.user) {
+        console.log("toke: user>>>");
+        console.log(params.user);
+        params.token.uid = user?.uid;
+        params.token.secret = user?.secret;
+      }
       return params.token;
     },
     session: async ({ session, user, token }) => {
       console.log("CUSTOM authOPtions: SESSION REQUESTED >>>");
-      console.log(session);
-      console.log(user);
-      console.log(token);
+      if (session.user) {
+        console.log("session: token>>> ");
+        console.log(token);
+        session.user.uid = token.uid;
+        session.user.secret = token.secret;
+      }
 
       return session;
     },
@@ -89,6 +97,7 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
 
         if (user) {
           console.log("USER EXISTS, COPYING DATA>>>");
+          console.log(user);
           user.registered = true;
           user.email = profile.email || undefined;
           user.name = profile.name || undefined;

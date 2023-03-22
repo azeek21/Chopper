@@ -56,6 +56,7 @@ export default async function handler(
     await url.save();
     // redirect ;
     res.redirect(url.to_url);
+    return ;
   }
 
   // if url is password protected
@@ -68,13 +69,13 @@ export default async function handler(
       user = await CreateUser();
       await user.save();
       const userCookies = generateUserCookies(user);
-      res.setHeader("Set-Cookie", [userCookies.uid, userCookies.secret]);
+      res.setHeader("Set-Cookie", [userCookies.uid, userCookies.secret, userCookies.registered]);
     }
     console.log("USER FETCHED >>>");
 
     // check if user has been retrying;
     if (!isAllowable(user, url.urlid)) {
-      res.status(400).json({ message: "You are not allowed. Due to too many wrong failed tries."})
+      res.status(400).json({ message: "You are not allowed. Due to too many failed tries."})
       return ;
     }
     console.log("USER ALLOWABLE >>>");
@@ -127,6 +128,7 @@ export default async function handler(
 
       console.log("RETRY COUNT -> ", retryObject.count);
 
+      // password didn't match but retry count was not reached, update retry object with just incremented retry.count;
       updateRetryObject(user, retryObject);
       await user.save();
       res.status(400).redirect("/" + url.urlid);
@@ -148,8 +150,13 @@ export default async function handler(
       };
 
       url.clicks += 1;
-      await url.save();
-      await user.save();
+      try {
+        await Promise.all([user.save(), url.save()]);
+      } catch (error) {
+        // url or user failed to save during redirection
+        // set up here some kind of error reporting which reports to you instantly
+        // a good example can be a telegram bot which sends you message in case of anything bad ...
+      }
       res.status(200).redirect(url.to_url);
       return ;
     }

@@ -22,7 +22,8 @@ export default async function handler(
   }
 
   const url = await UrlModel.findOne<HydratedDocument<URL_DATA_INTERFACE>>({
-    owner: user.uid
+    owner: user.uid,
+    secret: user.secret
   }).sort({ created_at: "desc"}).exec();
 
   if (!url) {

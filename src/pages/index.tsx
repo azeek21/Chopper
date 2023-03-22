@@ -13,24 +13,33 @@ import typeWriter from "@/utils/typewriter";
 import Link from "next/link";
 import { useQuery } from "react-query";
 import LoadingOverlay from "@/components/loading-overlay";
+import { getCookie } from "@/utils/cookie";
 
 export default function Index() {
   const [copied, setCopied] = useState(false);
-  // const { data, isLoading, error } = useQuery(
-  //   "lastAdded",
-  //   async () => {
-  //     const lastUrl = await (await fetch("/api/urls/get/last")).json();
-  //     if (lastUrl.error) {
-  //       return null;
-  //     }
-  //     return lastUrl;
-  //   },
-  //   {
-  //     onSuccess: () => {
-  //       setCopied(false);
-  //     },
-  //   }
-  // );
+  const { data, isLoading, error } = useQuery(
+    "lastAdded",
+    async () => {
+      if (getCookie()?.noCookie) {
+        console.log("NO COOKIE TO FETCH LAST, THROWING ...");
+        return null;
+      };
+      console.log("USER FOUND. FETCHING LAST >>>");
+      const lastUrl = await (await fetch("/api/urls/get/last")).json();
+      if (lastUrl.error) {
+        console.log("NO LAST URL, THROWING ...");
+        return null;
+      }
+      console.log("LAST >>>");
+      
+      return lastUrl;
+    },
+    {
+      onSuccess: () => {
+        setCopied(false);
+      },
+    }
+  );
 
   const jokeQuery = useQuery("joke", async () => {
     return (await fetch("https://v2.jokeapi.dev/joke/Programming,Miscellaneous,Pun,Spooky?blacklistFlags=religious&format=txt")).text()
@@ -60,7 +69,7 @@ export default function Index() {
         unique toilered experinece
       </HomeText>
       <ContentWrapper>
-      {/* {data && !error && (
+      {data && !error && (
         <LoadingOverlay loading={isLoading}>
           <Copyable copied={copied}>
             <Button
@@ -80,7 +89,7 @@ export default function Index() {
             </Button>
           </Copyable>
         </LoadingOverlay>
-      )} */}
+      )}
         <CreationForm />
       </ContentWrapper>
       {
