@@ -74,7 +74,7 @@ const StyledNavbar = styled.ul`
     }
   }
   @media (max-width: 350px) {
-    gap: var(--padding-small)
+    gap: var(--padding-small);
   }
 `;
 
@@ -84,6 +84,13 @@ function PfP(src: string) {
 
 function Profile() {
   const { data: session, status: status } = useSession();
+
+  const customSignOut = async () => {
+    const newCookies = await fetch('/api/new-user');
+    signOut();
+  }
+  console.log("PROFILE SESSION>>>")
+  console.log(session);
 
   if (!session) {
     return (
@@ -122,7 +129,7 @@ function Profile() {
           onClick={(ev) => {
             ev.preventDefault();
             if (!session.user.image) {
-              signOut();
+              customSignOut();
             }
           }}
         >
@@ -131,7 +138,7 @@ function Profile() {
           )}
           <span
             onClick={() => {
-              signOut();
+              customSignOut();
             }}
           >
             <p>Sign out</p>
@@ -169,6 +176,12 @@ const StyledProfileContainer = styled.div<{ withPic?: boolean }>`
     align-items: center;
     justify-content: space-evenly;
     gap: var(--padding-small);
+    padding: var(--padding-normal);
+    border-radius: var(--padding-normal);
+  }
+  &:hover {
+    background-color: white;
+    color: ${({ theme }) => theme.textColor.primary};
   }
   ${({ withPic }) => {
     if (withPic) {

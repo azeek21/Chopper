@@ -17,6 +17,11 @@ export interface Retry_Interface {
     last_cooldown_duration?: number,
 }
 
+export interface PROVIDER_INTERFACE {
+    name: string,
+    id: string,
+}
+
 export interface USER_INTERFACE {
     uid: string,
     registered: boolean,
@@ -26,6 +31,7 @@ export interface USER_INTERFACE {
     email?: string,
     has_access_to?: string[],
     retries?: Array<Retry_Interface>,
+    providers?: Array<PROVIDER_INTERFACE>,
 }
 
 const UserSchema = new Schema<USER_INTERFACE>({
@@ -43,6 +49,7 @@ const UserSchema = new Schema<USER_INTERFACE>({
     email: String,
     has_access_to: Array<String>,
     retries: Array<Retry_Interface>,
+    providers: Array<PROVIDER_INTERFACE>,
 })
 
 const UserModel = models.myuser || model<USER_INTERFACE>('myuser', UserSchema);

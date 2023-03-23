@@ -15,6 +15,7 @@ import { HydratedDocument } from "mongoose";
 import { USER_INTERFACE } from "@/db/models/user-model";
 import { serialize } from "cookie";
 import dayjs from "dayjs";
+import { userHasProvider } from "@/utils/provider-utils";
 
 const max_age = "Fri, 31 Dec 9999 21:10:10 GMT";
 
@@ -34,6 +35,10 @@ export const authOptions: NextAuthOptions = {
       console.log("USER CREATE EVENT >>>");
       console.log(message);
     },
+  },
+  theme: {
+    brandColor: "#603d6a",
+    logo: "/axe.png",
   },
 };
 
@@ -56,7 +61,7 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
       if (session.user) {
         console.log("session: token>>> ");
         console.log(token);
-        session.user.uid = token.uid as string; 
+        session.user.uid = token.uid as string;
         session.user.secret = token.secret as string;
       }
 
@@ -68,15 +73,15 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
     clientId: process.env.GITHUB_CLIENT_ID!,
     clientSecret: process.env.GITHUB_SECRET!,
     async profile(profile, tokens) {
-      console.log("WRITING USER TO DATABASE WITH PROFILE METHOD >>>");
-      console.log(req.cookies);
-      console.log(profile);
-      console.log(tokens);
+      console.log("NEW USER | PROFILE METHOD >>>");
 
       if (req.cookies["weak-uid"]) {
         console.log("REMOVING COOKIES >>>");
         await mongoClient();
-        user = await getUser(req);
+        user = await getUser(req, {
+          name: "github",
+          id: profile.id.toString(),
+        });
 
         // removing before-register cookies
         res.setHeader("Set-Cookie", [
@@ -95,14 +100,22 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
           }),
         ]);
 
-        if (user) {
+        if (
+          user &&
+          !userHasProvider(user, {name: "github", id: profile.id.toString()})
+        ) {
           console.log("USER EXISTS, COPYING DATA>>>");
           console.log(user);
           user.registered = true;
           user.email = profile.email || undefined;
           user.name = profile.name || undefined;
+          if (user.providers) {
+            user.providers.push({name: "github", id: profile.id.toString()});
+          } else {
+            user.providers = [{name: "github", id: profile.id.toString()}];
+          }
           await user.save();
-        };
+        }
       }
 
       return {
@@ -116,7 +129,6 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
       };
     },
   });
-  const transferUser = async (message: { user: User }) => {};
 
   return await NextAuth(req, res, {
     ...authOptions,
@@ -124,5 +136,3 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
     callbacks: customCallbacks,
   });
 }
-
-// export default NextAuth(authOptions);
