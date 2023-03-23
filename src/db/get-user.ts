@@ -1,7 +1,6 @@
 import { HydratedDocument } from "mongoose";
 import { NextApiRequest } from "next";
-import UserModel, { PROVIDER_INTERFACE, USER_INTERFACE } from "./models/user-model";
-import { getServerSession } from "next-auth";
+import UserModel, { USER_INTERFACE } from "./models/user-model";
 import { getSession } from "next-auth/react";
 
 

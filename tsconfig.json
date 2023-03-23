@@ -15,6 +15,7 @@
     "jsx": "preserve",
     "incremental": true,
     "baseUrl": ".",
+    "typeRoots": ["./src/types", "./types/"],
     "paths": {
       "@/*": ["./src/*"],
       "componets/*": ["./src/components/*"],
