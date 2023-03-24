@@ -36,7 +36,7 @@ export default function CreationForm() {
     }, {
         onMutate: () => { setLoading(true) },
         onSuccess: () => { setForm(initialFormState); setLoading(false); },
-        onSettled: () => { setExpanded(false); queryClient.invalidateQueries("lastAdded") },
+        onSettled: () => { setExpanded(false); queryClient.invalidateQueries("lastAdded"); queryClient.invalidateQueries("urls");},
     })
 
     useEffect( () => {
@@ -80,9 +80,7 @@ export default function CreationForm() {
 
     return (
         <div style={{
-            display: 'flex',
-            marginTop: "2rem",
-            marginBottom: "2rem"
+            display: 'flex'
         }}>
             <StyledCreationForm onSubmit={(ev) => {
                 ev.preventDefault();
@@ -107,9 +105,23 @@ export default function CreationForm() {
 
             
             { (form.to_url.length > 0 || expanded) &&
-                <Button type="button" onClick={() => {setExpanded(expanded => !expanded)}}>
+            <div style={{display: "flex", width: "100%", gap: "var(--padding-normal)"}}> 
+                <Button type="button" onClick={(ev) => {
+                    setExpanded(expanded => !expanded);
+
+                    ev.target.scrollIntoView({behavior: "smooth", block: expanded ? "end" : "start", inline: "center"});
+                }}>
                     {expanded ? <ExpandLess/> : <ExpandMore />}
                 </Button>
+
+                <FormItemWrapper>
+               <Input type={"date"} id="timeout" name="timeout" value={form.timeout || ""} onChange={changeHandler} placeholder=" " title="Url will be disabled after this date."/>
+               <label className="label" htmlFor="timeout"> Disable after this date </label>
+               <span> <Update /> </span>
+               </FormItemWrapper>
+
+
+                </div>
             }
 
             { expanded &&
@@ -144,14 +156,10 @@ export default function CreationForm() {
                <label className="label" htmlFor="limit"> First N people can use this link </label>
                <span> <LinkOff /> </span>
                </FormItemWrapper>
+               
 
 
                 {/* TIMEOUT INPUT */}
-               <FormItemWrapper>
-               <Input type={"date"} id="timeout" name="timeout" value={form.timeout || ""} onChange={changeHandler} placeholder=" " title="Url will be disabled after this date."/>
-               <label className="label" htmlFor="timeout"> Disable after this date </label>
-               <span> <Update /> </span>
-               </FormItemWrapper>
                </>
             }
 

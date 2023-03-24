@@ -11,6 +11,8 @@ import { NextApiRequest, NextApiResponse } from "next";
 import NextAuth, { AuthOptions, NextAuthOptions } from "next-auth";
 import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
+import DiscordProvider from "next-auth/providers/discord";
+import YandexProvider from "next-auth/providers/yandex";
 
 const max_age = "Fri, 31 Dec 9999 21:10:10 GMT";
 
@@ -35,7 +37,7 @@ const removeCookies = (res: NextApiResponse) => {
 const handleCopy = async (
   user: HydratedDocument<USER_INTERFACE> | null,
   provider: PROVIDER_INTERFACE,
-  profile: { name: string | null; email: string | null }
+  profile: { name: string | null; email: string | null; image?: string }
 ) => {
   if (user && !userHasProvider(user, provider)) {
     console.log("USER EXISTS, COPYING DATA>>>");
@@ -43,6 +45,9 @@ const handleCopy = async (
     user.registered = true;
     user.email = profile.email || user.email || undefined;
     user.name = profile.name || user.name || undefined;
+    if (profile.image && !user.image_url) {
+      user.image_url = profile.image;
+    }
     if (user.providers && user.providers.length >= 1) {
       user.providers.push(provider);
     } else {
@@ -114,7 +119,7 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
       await handleCopy(
         user,
         { name: "github", id: profile.id.toString() },
-        { name: profile.name, email: profile.email }
+        { name: profile.name, email: profile.email, image: profile.avatar_url }
       );
 
       return {
@@ -137,6 +142,10 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
       console.log("-------------------G-");
       await mongoClient();
 
+      user = await getUser(req, {
+        name: "google",
+        id: profile.sub,
+      });
       // remove cookies
       removeCookies(res);
 
@@ -144,7 +153,7 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
       await handleCopy(
         user,
         { name: "google", id: profile.sub },
-        { name: profile.name, email: profile.email }
+        { name: profile.name, email: profile.email, image: profile.picture }
       );
 
       return {
@@ -158,8 +167,101 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
     },
   });
 
+  const customDiscordProvider = DiscordProvider({
+    clientId: process.env.DISCORD_CLIENT_ID!,
+    clientSecret: process.env.DISCORD_CLIENT_SECRET!,
+    profile: async (profile) => {
+      console.log("DISCORD PROFILE");
+      console.log(profile);
+      console.log("----------");
+      await mongoClient();
+
+      user = await getUser(req, {
+        name: "discord",
+        id: profile.id,
+      });
+      // remove cookies
+      removeCookies(res);
+
+      if (profile.avatar === null) {
+        const defaultAvatarNumber = parseInt(profile.discriminator) % 5;
+        profile.image_url = `https://cdn.discordapp.com/embed/avatars/${defaultAvatarNumber}.png`;
+      } else {
+        const format = profile.avatar.startsWith("a_") ? "gif" : "png";
+        profile.image_url = `https://cdn.discordapp.com/avatars/${profile.id}/${profile.avatar}.${format}`;
+      }
+
+      // copy data
+      await handleCopy(
+        user,
+        { name: "discord", id: profile.id },
+        {
+          name: profile.global_name || profile.display_name || profile.username,
+          email: profile.email,
+          image: profile.image_url,
+        }
+      );
+
+      return {
+        id: profile.id,
+        email: profile.email,
+        name: profile.global_name || profile.display_name || profile.username,
+        uid: user?.uid || null,
+        secret: user?.secret || null,
+        image: profile.image_url,
+      };
+    },
+  });
+
+  console.log("INFO >>>");
+  console.log(process.env.YANDEX_CLIENT_ID);
+  console.log(process.env.YANDEX_CLIENT_SECRET);
+  console.log("---------- I");
+
+  const customYandexProvider = YandexProvider({
+    clientId: process.env.YANDEX_CLIENT_ID!,
+    clientSecret: process.env.YANDEX_CLIENT_SECRET!,
+    profile: async (profile) => {
+      console.log("YANDEX PROVIDER");
+      console.log(profile);
+      console.log("-------- Y");
+      await mongoClient();
+      user = await getUser(req, { name: "yandex", id: profile.id });
+
+      removeCookies(res);
+
+      const image_url = profile.is_avatar_empty
+        ? null
+        : `https://avatars.yandex.net/get-yapic/${profile.default_avatar_id}/islands-200`;
+
+      // copy data
+      await handleCopy(
+        user,
+        { name: "yandex", id: profile.id },
+        {
+          name: profile.display_name,
+          email: profile.default_email,
+          image: image_url || "",
+        }
+      );
+
+      return {
+        id: profile.id,
+        email: profile.default_email,
+        name: profile.display_name,
+        uid: user?.uid || null,
+        secret: user?.secret || null,
+        image: image_url,
+      };
+    },
+  });
   return await NextAuth(req, res, {
     ...authOptions,
-    providers: [customGithubProvider, customGoogleProvider],
+    providers: [
+      customGithubProvider,
+      customGoogleProvider,
+      customDiscordProvider,
+      customYandexProvider,
+    ],
   });
 }

@@ -32,6 +32,7 @@ export interface USER_INTERFACE {
     has_access_to?: string[],
     retries?: Array<Retry_Interface>,
     providers?: Array<PROVIDER_INTERFACE>,
+    image_url?: string,
 }
 
 const UserSchema = new Schema<USER_INTERFACE>({
@@ -50,6 +51,7 @@ const UserSchema = new Schema<USER_INTERFACE>({
     has_access_to: Array<String>,
     retries: Array<Retry_Interface>,
     providers: Array<PROVIDER_INTERFACE>,
+    image_url: String,
 })
 
 const UserModel = models.myuser || model<USER_INTERFACE>('myuser', UserSchema);

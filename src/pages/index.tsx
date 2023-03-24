@@ -23,7 +23,7 @@ export default function Index() {
       if (getCookie()?.noCookie) {
         console.log("NO COOKIE TO FETCH LAST, THROWING ...");
         return null;
-      };
+      }
       console.log("USER FOUND. FETCHING LAST >>>");
       const lastUrl = await (await fetch("/api/urls/get/last")).json();
       if (lastUrl.error) {
@@ -31,7 +31,7 @@ export default function Index() {
         return null;
       }
       console.log("LAST >>>");
-      
+
       return lastUrl;
     },
     {
@@ -41,12 +41,21 @@ export default function Index() {
     }
   );
 
-  const jokeQuery = useQuery("joke", async () => {
-    return (await fetch("https://v2.jokeapi.dev/joke/Programming,Miscellaneous,Pun,Spooky?blacklistFlags=religious&format=txt")).text()
-  }, {
-    initialData: "Why don't chickens come to my site ? \nCuz they don't like it short!",
-    refetchInterval: 30000,
-  })
+  const jokeQuery = useQuery(
+    "joke",
+    async () => {
+      return (
+        await fetch(
+          "https://v2.jokeapi.dev/joke/Programming,Miscellaneous,Pun,Spooky?blacklistFlags=religious&format=txt"
+        )
+      ).text();
+    },
+    {
+      initialData:
+        "Why don't chickens come to my site ? \nCuz they don't like it short!",
+      refetchInterval: 30000,
+    }
+  );
 
   useEffect(() => {
     setTimeout(() => {
@@ -56,7 +65,9 @@ export default function Index() {
 
   return (
     <StyledHome>
-      <RoundButton title={(jokeQuery.data && !jokeQuery.error) ? jokeQuery.data : ""}>
+      <RoundButton
+        title={jokeQuery.data && !jokeQuery.error ? jokeQuery.data : ""}
+      >
         <Link href="https://github.com/azeek21/url_shortener_practice">
           <Grade />
         </Link>
@@ -69,32 +80,30 @@ export default function Index() {
         unique toilered experinece
       </HomeText>
       <ContentWrapper>
-      {data && !error && (
-        <LoadingOverlay loading={isLoading}>
-          <Copyable copied={copied}>
-            <Button
-              onClick={() => {
-                navigator.clipboard.writeText(data.url);
-                setCopied(true);
-              }}
-              disabled={copied}
-            >
-              <ContentCopy />
-            </Button>
-            <h4>{data.url}</h4>
-            <Button>
-            <Link href={"/dashboard"} style={{color: "inherit"}}>
-              <ReadMore color={"inherit"}/>
-            </Link>
-            </Button>
-          </Copyable>
-        </LoadingOverlay>
-      )}
+        {data && !error && (
+          <LoadingOverlay loading={isLoading}>
+            <Copyable copied={copied}>
+              <Button
+                onClick={() => {
+                  navigator.clipboard.writeText(data.url);
+                  setCopied(true);
+                }}
+                disabled={copied}
+              >
+                <ContentCopy />
+              </Button>
+              <h4>{data.url}</h4>
+              <Button>
+                <Link href={"/dashboard"} style={{ color: "inherit" }}>
+                  <ReadMore color={"inherit"} />
+                </Link>
+              </Button>
+            </Copyable>
+          </LoadingOverlay>
+        )}
         <CreationForm />
       </ContentWrapper>
-      {
-        false ? <h1>Yes</h1> : null
-      }
+      {false ? <h1>Yes</h1> : null}
     </StyledHome>
   );
 }
@@ -130,7 +139,7 @@ const HomeTitle = styled(Title)`
   @media (max-width: 550px) {
     font-size: var(--fs-2xl);
     max-width: 100%;
-}  
+  }
 `;
 
 const Nefor = styled.div`
@@ -141,17 +150,17 @@ const Nefor = styled.div`
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   transition: 300ms ease-out;
-  min-height: 130%;
+  min-height: 140%;
 
   @media (max-width: 718px) {
-      font-size: var(--fs-3xl);
-}
+    font-size: var(--fs-3xl);
+  }
 
-@media (max-width: 550px) {
-      font-size: var(--fs-2xl);
-      text-align: center;
-      align-self: center;
-}
+  @media (max-width: 550px) {
+    font-size: var(--fs-2xl);
+    text-align: center;
+    align-self: center;
+  }
 `;
 
 const HomeText = styled.p`
@@ -161,7 +170,7 @@ const HomeText = styled.p`
   letter-spacing: 0.05rem;
   max-width: 50%;
   @media (max-width: 997px) {
-      max-width: 80%;
+    max-width: 80%;
   }
   @media (max-width: 550px) {
     max-width: 100%;
@@ -169,14 +178,17 @@ const HomeText = styled.p`
 `;
 
 const StyledHome = styled.section`
-  padding: 5rem 0 2rem 2rem;
+  padding: 5rem 0 0 2rem;
   display: flex;
   align-items: flex-start;
   justify-content: center;
   gap: var(--padding-gigant);
   @media (max-width: 550px) {
-    padding: 5rem 0 1rem 1rem;
+    padding: 5rem 1rem 0 1rem;
     text-align: center;
+  }
+  @media (max-width: 350px) {
+    padding: 5rem 0.3rem 0 0.3rem;
   }
 `;
 
@@ -193,7 +205,7 @@ const RoundButton = styled(Button)`
 `;
 
 const ContentWrapper = styled.div`
-font-size: var(--fs-xl);
+  font-size: var(--fs-xl);
   padding: 0;
   display: flex;
   align-items: flex-start;
@@ -201,15 +213,15 @@ font-size: var(--fs-xl);
   max-width: 50%;
   flex-direction: column;
   height: auto;
-  gap: var(--padding-small);
+  gap: var(--padding-big);
+  margin-bottom: 2rem;
 
   @media (max-width: 997px) {
-      max-width: 80%;
-      width: 80%;
+    max-width: 80%;
+    width: 80%;
   }
   @media (max-width: 550px) {
     width: 100%;
     font-size: var(--fs-normal);
   }
-  
 `;

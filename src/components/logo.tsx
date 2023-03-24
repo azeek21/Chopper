@@ -8,7 +8,7 @@ export default function Logo() {
     <StyledLogo>
       <Link href="/">
         CHOP
-      <Image src={'/axe.png'} alt="Two Saw Crossed Logo" width={32} height={32}/>
+        <img src={"/axe.png"} alt="Two Saw Crossed Logo" />
         PER
       </Link>
     </StyledLogo>
@@ -16,14 +16,19 @@ export default function Logo() {
 }
 
 const StyledLogo = styled.span`
-  background-color: rgba(255,255,255,0.5);
+  background-color: rgba(255, 255, 255, 0.5);
   font-size: var(--fs-2xl);
+  --img-width: var(--fs-2xl);
   text-transform: uppercase;
   font-weight: bold;
   border-radius: var(--padding-small);
-  /* border: 0.15rem dashed ${ ({theme}) => theme.textColor.pink}; */
+  /* border: 0.15rem dashed ${({ theme }) => theme.textColor.pink}; */
   padding: var(--padding-small);
-  box-shadow: ${ ({theme}) => theme.shadow.secondary};
+  box-shadow: ${({ theme }) => theme.shadow.secondary};
+  & img {
+    width: calc(var(--img-width) + 1rem);
+    object-fit: contain;
+  }
   & a {
     color: ${({ theme }) => theme.textColor.primary};
     text-decoration: none;
@@ -34,6 +39,7 @@ const StyledLogo = styled.span`
   @media (max-width: 550px) {
     & {
       font-size: var(--fs-xl);
+      --img-width: var(--fs-xl);
     }
-}
+  }
 `;

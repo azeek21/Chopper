@@ -18,8 +18,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return ;
     }
 
-    setTimeout(() => {
-        res.status(200).json(url);
-    }, 4000);
+    res.status(200).json(url);
     return ;
 };

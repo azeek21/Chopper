@@ -9,6 +9,8 @@ import {
   PostAdd,
   Login,
   Logout,
+  PersonAddAlt1,
+  AccountCircle,
 } from "@mui/icons-material";
 import { DefaultUser, Session, User } from "next-auth";
 import Link from "next/link";
@@ -20,41 +22,6 @@ export default function Navbar() {
         <NavbarLink Icon={Home} href="/" name="HOME" />
         <NavbarLink Icon={PostAdd} href="/dashboard" name="DASHBOARD" />
         <NavbarLink Icon={NotificationsActive} href="/news" name="NEWS" />
-
-        {/* SINGIN */}
-        {/* {sessionStatus === "loading" || sessionStatus === "unauthenticated" || loading ? (
-          <LoadingOverlay loading={loading}>
-            <NavbarLink
-              href="/api/auth/signin"
-              name="SIGN IN"
-
-              clickHandler={() => {
-                SetLoading(true);
-                signIn()
-              }
-            }
-            />
-          </LoadingOverlay>
-        ) : (
-          ""
-        )} */}
-
-        {/* SIGNOUT */}
-        {/* {sessionStatus === "authenticated" ? (
-          <LoadingOverlay loading={loading}>
-            <NavbarLink
-              href="/api/auth/signout"
-              name="SIGN OUT"
-              Icon={() => {return session.user.image ? PfP(session.user.image) : null}}
-              clickHandler={() => {
-                SetLoading(true);
-                signOut();
-              }}
-            />
-          </LoadingOverlay>
-        ) : (
-          ""
-        )} */}
 
         {/* PROFILE */}
         <Profile />
@@ -86,10 +53,10 @@ function Profile() {
   const { data: session, status: status } = useSession();
 
   const customSignOut = async () => {
-    const newCookies = await fetch('/api/new-user');
+    const newCookies = await fetch("/api/new-user");
     signOut();
-  }
-  console.log("PROFILE SESSION>>>")
+  };
+  console.log("PROFILE SESSION>>>");
   console.log(session);
 
   if (!session) {
@@ -105,7 +72,7 @@ function Profile() {
             }}
           >
             {" "}
-            <span>
+            <span className="profile__signin">
               <Login /> <p>Sign In</p>
             </span>{" "}
           </Link>
@@ -116,50 +83,88 @@ function Profile() {
 
   return (
     <LoadingOverlay>
-      <StyledProfileContainer
-        withPic={
-          session.user && session.user.image && session.user.image?.length > 0
-            ? true
-            : false
-        }
-      >
+      <StyledProfileContainer>
         <Link
           href="api/auth/signout"
-          title="Sign out"
           onClick={(ev) => {
             ev.preventDefault();
-            if (!session.user.image) {
-              customSignOut();
-            }
           }}
         >
-          {session.user && session.user.image && (
-            <StyledProfilePicture src={session.user.image} />
-          )}
-          <span
-            onClick={() => {
-              customSignOut();
-            }}
-          >
-            <p>Sign out</p>
-            <Logout />
-          </span>
+          <div className="profile__image">
+            
+              <StyledProfilePicture
+                src={session.user.image || ""}
+              />
+          </div>
+          <div className="profile__actions__container">
+            <span
+              title="Sign out ->"
+              onClick={() => {
+                customSignOut();
+              }}
+            >
+              <p>Sign out</p>
+              <Logout />
+            </span>
+
+            <span
+              title="Connect another account +"
+              onClick={() => {
+                signIn();
+              }}
+            >
+              {" "}
+              <p>Add account</p> <PersonAddAlt1 />{" "}
+            </span>
+          </div>
         </Link>
       </StyledProfileContainer>
     </LoadingOverlay>
   );
 }
 
-const withPicStyle = `& span {position: absolute; top:0; opacity: 0; right: 0; z-index: -9; width: max-content;} &:hover span {top: 130%; opacity: 1; z-index: 9; color: black; background-color: white; border-radius: var(--padding-small); padding: var(--padding-big)}`;
+const withPicStyle = `& .profile__actions__container {} &:hover .profile__actions__container {}`;
 
 const StyledProfileContainer = styled.div<{ withPic?: boolean }>`
   position: relative;
-  border-radius: var(--padding-normal);
+  border-radius: 5rem;
   display: flex;
   align-items: center;
   justify-content: center;
   color: ${({ theme }) => theme.textColor.primary};
   color: white;
+  border: 0.1rem solid ${({ theme }) => theme.textColor.purple};
+
+  .profile__image {
+    font-size: 2rem;
+    padding: 0;
+    margin: 0;
+    height: min-content;
+    line-height: 0;
+    border-radius: 50%;
+    aspect-ratio: 1;
+    background-color: white;
+    background-image: url("/avatar_placeholder.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: bottom;
+    overflow: hidden;
+    & svg {
+      font-size: inherit;
+    }
+  }
+
+  & span {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--padding-small);
+    padding: var(--padding-small);
+  }
+  & .profile__signin {
+    padding: var(--padding-normal);
+  }
+
   & a {
     display: flex;
     align-items: center;
@@ -171,17 +176,44 @@ const StyledProfileContainer = styled.div<{ withPic?: boolean }>`
       font-size: inherit;
     }
   }
-  & span {
+  & .profile__actions__container {
     display: flex;
     align-items: center;
+    flex-direction: column;
     justify-content: space-evenly;
     gap: var(--padding-small);
-    padding: var(--padding-normal);
+    padding: var(--padding-small);
     border-radius: var(--padding-normal);
+    color: black;
+    background-color: white;
+    position: absolute;
+    top: 0;
+    opacity: 0;
+    right: 0;
+    z-index: -9;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+    & span {
+      width: 100%;
+      border: 0.1rem solid ${({ theme }) => theme.textColor.primary};
+      border-radius: var(--padding-small);
+      padding: var(--padding-small);
+      &:hover {
+        box-shadow: ${({ theme }) => theme.shadow.primary};
+      }
+    }
   }
   &:hover {
     background-color: white;
     color: ${({ theme }) => theme.textColor.primary};
+    & .profile__actions__container {
+      top: 0;
+      height: auto;
+      width: max-content;
+      opacity: 1;
+      z-index: 9;
+    }
   }
   ${({ withPic }) => {
     if (withPic) {
@@ -190,7 +222,7 @@ const StyledProfileContainer = styled.div<{ withPic?: boolean }>`
     return "";
   }}
 
-  @media (max-width: 550px) {
+  @media (max-width: 400px) {
     & p {
       display: none;
     }

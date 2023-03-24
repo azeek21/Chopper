@@ -4,7 +4,7 @@ export default function News() {
 
     return (
         <StyledNews>
-            <h1>No news yet ... :(</h1>
+            <h1>No news yet :)</h1>
         </StyledNews>
     )
 }
@@ -12,4 +12,6 @@ export default function News() {
 const StyledNews = styled.section`
     margin: 0;
     padding: 5rem 1rem;
+    color: ${ ({ theme }) => theme.textColor.primary };
+
 `

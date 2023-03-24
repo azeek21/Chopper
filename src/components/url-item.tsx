@@ -115,8 +115,8 @@ export default function UrlItem({ url }: { url: any }) {
       onSettled: () => {
         setLoading(false);
         setEditing(false);
-        queryClient.invalidateQueries("urls" + url.urlid);
         queryClient.invalidateQueries("url" + url.urlid);
+        queryClient.invalidateQueries("urls");
       },
     }
   );
@@ -433,6 +433,17 @@ const CopyField = styled.div`
   & h3 {
     -webkit-user-select: all;
     user-select: all;
+  };
+
+  @media (max-width: 550px) {
+    font-size: var(--fs-normal);
+  }
+
+    @media (max-width: 389px) {
+    font-size: var(--fs-sm);
+  }
+  @media (max-width: 350px) {
+    font-size: var(--fs-xsm);
   }
 `;
 
