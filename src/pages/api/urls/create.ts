@@ -23,8 +23,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             return res.status(400).json({error: "Missing to_url!"})
         };
         await mongoClient();
+        console.log("FETCHING USER IN CREATE URL >>>")
         const user = await getUser(req);
         if (!user) {
+            console.log("FAILED TO FETCH USER IN CREATE URL >>>")
             res.status(400).json({error: "Bad request, No user found."});
             return ;
         }

@@ -108,8 +108,8 @@ export default function CreationForm() {
             <div style={{display: "flex", width: "100%", gap: "var(--padding-normal)"}}> 
                 <Button type="button" onClick={(ev) => {
                     setExpanded(expanded => !expanded);
-
-                    ev.target.scrollIntoView({behavior: "smooth", block: expanded ? "end" : "start", inline: "center"});
+                    const domElem = ev.target as HTMLElement;
+                    domElem.scrollIntoView({behavior: "smooth", block: expanded ? "end" : "start", inline: "center"});
                 }}>
                     {expanded ? <ExpandLess/> : <ExpandMore />}
                 </Button>

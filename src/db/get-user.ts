@@ -2,6 +2,7 @@ import { HydratedDocument } from "mongoose";
 import { NextApiRequest } from "next";
 import UserModel, { USER_INTERFACE } from "./models/user-model";
 import { getSession } from "next-auth/react";
+import { getToken } from "next-auth/jwt";
 
 
 export interface PROVIDER_OPTIONS {
@@ -32,12 +33,11 @@ export default async function getUser(req: NextApiRequest, provider?: PROVIDER_O
 
   if (!uid) {
     console.log("GET USER: USER >>>");
-    const session = await getSession({req: req});
-    uid = session?.user?.uid || undefined;
-    secret = session?.user?.secret || undefined;
-    console.log(session);
-    console.log("-----------------");
-    
+    const session = await getToken({req});
+    if (session) {
+      secret = session.secret as string | undefined;
+      uid = session.uid as string | undefined;
+    }
   }
 
   if (!uid || !secret) {
