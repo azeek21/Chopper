@@ -38,7 +38,11 @@ export default function Footer() {
         </li>
         <li>
           <ContentWrapper>
-            <a target="_blank" href="mailto:akraliev0516@gmail.com" rel="noreferrer">
+            <a
+              target="_blank"
+              href="mailto:akraliev0516@gmail.com"
+              rel="noreferrer"
+            >
               <EmailRounded /> askaraliev0516@gmail.com
             </a>
           </ContentWrapper>
