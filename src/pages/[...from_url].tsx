@@ -6,10 +6,13 @@ import getUser from "@/db/get-user";
 import UrlModel, { URL_DATA_INTERFACE } from "@/db/models/url-model";
 import { getRetryObject } from "@/utils/retries";
 import {
-  ArrowRightAlt, Key, Lock as LockIcon,
+  ArrowRightAlt,
+  Key,
+  Lock as LockIcon,
   LockClock,
-  RepeatOn as RepeatOnIcon, Visibility,
-  VisibilityOff
+  RepeatOn as RepeatOnIcon,
+  Visibility,
+  VisibilityOff,
 } from "@mui/icons-material";
 import dayjs from "dayjs";
 import { HydratedDocument } from "mongoose";
