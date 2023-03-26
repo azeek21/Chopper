@@ -5,8 +5,11 @@ import handleCopy from "./handle-user-copy";
 import getUser from "@/db/get-user";
 import { NextApiRequest, NextApiResponse } from "next";
 
-export default function customDiscordProvider(req: NextApiRequest, res: NextApiResponse) {
-    return Discord({
+export default function customDiscordProvider(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  return Discord({
     clientId: process.env.DISCORD_CLIENT_ID!,
     clientSecret: process.env.DISCORD_CLIENT_SECRET!,
     profile: async (profile) => {

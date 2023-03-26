@@ -35,7 +35,7 @@ export function addRetryObject(
     return false;
   }
   user.retries = [...user.retries, retryObject];
-  user.markModified('retries')
+  user.markModified("retries");
   return true;
 }
 
@@ -52,12 +52,15 @@ export function updateRetryObject(
   }
   const all = user.retries.filter((retry) => retry.urlid != retryObject.urlid);
   user.retries = [...all, retryObject];
-  user.markModified('retries')
+  user.markModified("retries");
 }
 
 // increments retry count of retry object with urlid of urlid and returns true
 // returns false if retry object with urlid not found;
-export function incrementRetryCount(user: HydratedDocument<USER_INTERFACE>, urlid: string) {
+export function incrementRetryCount(
+  user: HydratedDocument<USER_INTERFACE>,
+  urlid: string
+) {
   let retryObject = getRetryObject(user, urlid);
   if (!retryObject) {
     return false;
@@ -65,7 +68,7 @@ export function incrementRetryCount(user: HydratedDocument<USER_INTERFACE>, urli
 
   retryObject.count += 1;
   updateRetryObject(user, retryObject);
-  user.markModified("retries")
+  user.markModified("retries");
   return true;
 }
 
@@ -79,57 +82,60 @@ export function isAllowable(user: USER_INTERFACE, urlid: string) {
   }
   // if user didn't hit the limit
   if (retryObject.count < retryObject.max_retry_count) {
-
     // if this url has cooldown
     if (retryObject.cools_at) {
-        const now = dayjs().unix();
-        // if not cooled yet ;
-        if (retryObject.cools_at > now) {
-            return false;
-        }
-    };
+      const now = dayjs().unix();
+      // if not cooled yet ;
+      if (retryObject.cools_at > now) {
+        return false;
+      }
+    }
 
     // if limit wasn't reached and url was cool;
     return true;
-  };
+  }
 
   return false;
-};
+}
 
+export function resetUserRetries(
+  user: HydratedDocument<USER_INTERFACE>,
+  urlid: string
+) {
+  const retryObject = getRetryObject(user, urlid);
 
-export function resetUserRetries(user: HydratedDocument<USER_INTERFACE>, urlid: string) {
-    const retryObject = getRetryObject(user, urlid);
+  if (!retryObject) {
+    const newObj = createRetryObject(urlid);
+    addRetryObject(user, newObj);
+    return true;
+  }
 
-    if (!retryObject) {
-        const newObj = createRetryObject(urlid);
-        addRetryObject(user, newObj);
-        return true;
-    }
-
-    if (!retryObject.cools_at) {
-        retryObject.count = 0;
-        retryObject.max_retry_count = 3;
-        updateRetryObject(user, retryObject);
-        return true;
-    };
-    
-    const now = dayjs().unix();
-    if (retryObject.cools_at > now) {
-        return false;
-    };
-    
-    retryObject.cools_at = undefined;
+  if (!retryObject.cools_at) {
     retryObject.count = 0;
     retryObject.max_retry_count = 3;
     updateRetryObject(user, retryObject);
-    user.markModified("retries")
     return true;
+  }
+
+  const now = dayjs().unix();
+  if (retryObject.cools_at > now) {
+    return false;
+  }
+
+  retryObject.cools_at = undefined;
+  retryObject.count = 0;
+  retryObject.max_retry_count = 3;
+  updateRetryObject(user, retryObject);
+  user.markModified("retries");
+  return true;
 }
 
-
-export function deleteRetryObject (user: HydratedDocument<USER_INTERFACE>, urlid: string) {
+export function deleteRetryObject(
+  user: HydratedDocument<USER_INTERFACE>,
+  urlid: string
+) {
   if (user.retries) {
-    user.retries = user.retries.filter(retry => retry.urlid != urlid);
+    user.retries = user.retries.filter((retry) => retry.urlid != urlid);
   }
-  user.markModified("retries")
+  user.markModified("retries");
 }

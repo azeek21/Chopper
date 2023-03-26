@@ -26,7 +26,11 @@ export default function Footer() {
             target="_blank"
             rel="noopener noreferrer"
           >
-            <Button style={{padding: "3px 5px", border: "0.1rem solid gray"}} > <StarOutline fontSize="small" /> Star</Button> on GitHub <GitHub />
+            <Button style={{ padding: "3px 5px", border: "0.1rem solid gray" }}>
+              {" "}
+              <StarOutline fontSize="small" /> Star
+            </Button>{" "}
+            on GitHub <GitHub />
           </a>
         </li>
         <li>
@@ -34,17 +38,21 @@ export default function Footer() {
         </li>
         <li>
           <ContentWrapper>
-            <a target="_blank" href="mailto:akraliev0516@gmail.com">
+            <a target="_blank" href="mailto:akraliev0516@gmail.com" rel="noreferrer">
               <EmailRounded /> askaraliev0516@gmail.com
             </a>
           </ContentWrapper>
           <ContentWrapper>
-            <a target="_blank" href="https://t.me/foffnow">
+            <a target="_blank" href="https://t.me/foffnow" rel="noreferrer">
               <Telegram /> @foffnow
             </a>
           </ContentWrapper>
-          <ContentWrapper >
-            <a href="https://wa.me/79032120900/?text=Hey,%20I%20love%20your%20URL%20shortener%20project.%0A" target="_blank" rel="noopener noreferrer">
+          <ContentWrapper>
+            <a
+              href="https://wa.me/79032120900/?text=Hey,%20I%20love%20your%20URL%20shortener%20project.%0A"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <WhatsApp />
               Send Message
             </a>

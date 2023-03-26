@@ -2,11 +2,11 @@ import UrlItem from "./url-item";
 import styled from "styled-components";
 import { URL_DATA_INTERFACE } from "@/db/models/url-model";
 
-export default function Urls({urls}: {urls: URL_DATA_INTERFACE[]} ) {
-
+export default function Urls({ urls }: { urls: URL_DATA_INTERFACE[] }) {
   return (
     <StyledUrls>
-      {urls.length > 0 && urls.map((url) => <UrlItem key={url.urlid} url={url} />)}
+      {urls.length > 0 &&
+        urls.map((url) => <UrlItem key={url.urlid} url={url} />)}
     </StyledUrls>
   );
 }

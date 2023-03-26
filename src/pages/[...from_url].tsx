@@ -63,13 +63,23 @@ export default function RedirectTo(props: RedirectToPropsType) {
 
   return (
     <StyledRedirectTo>
-      <StyledForm method="POST" action={"/api/redirect/" + props.id} disabled={leftTime > 0}>
-      <h2>
-        <LockIcon /> Locked
-      </h2>
+      <StyledForm
+        method="POST"
+        action={"/api/redirect/" + props.id}
+        disabled={leftTime > 0}
+      >
+        <h2>
+          <LockIcon /> Locked
+        </h2>
         <StyledInfoContainer>
           {props.retries_left && (
-            <div title={"You will be locked after " + props.retries_left + " failed attempts"}>
+            <div
+              title={
+                "You will be locked after " +
+                props.retries_left +
+                " failed attempts"
+              }
+            >
               <p>
                 <RepeatOnIcon /> {props.retries_left}/3 left{" "}
               </p>
@@ -77,7 +87,11 @@ export default function RedirectTo(props: RedirectToPropsType) {
           )}
 
           {leftTime > 0 && (
-            <div title={"You will be able to retry after " + leftTime + " seconds..."}>
+            <div
+              title={
+                "You will be able to retry after " + leftTime + " seconds..."
+              }
+            >
               <LockClock />
               <p>{leftTime}s</p>
             </div>
@@ -135,13 +149,12 @@ export default function RedirectTo(props: RedirectToPropsType) {
             />
           </label>
         </FormItemWrapper>
-
       </StyledForm>
     </StyledRedirectTo>
   );
 }
 
-const StyledForm = styled.form<{disabled?: Boolean}>`
+const StyledForm = styled.form<{ disabled?: Boolean }>`
   background-color: rgba(28, 0, 33, 0.7);
   display: flex;
   flex-direction: column;
@@ -150,16 +163,17 @@ const StyledForm = styled.form<{disabled?: Boolean}>`
   gap: var(--padding-big);
   & input {
     border-radius: var(--padding-big);
-  box-shadow: ${ ({theme}) => theme.shadow.secondary };
-  };
-  box-shadow: ${ ({theme}) => theme.shadow.primary };
+    box-shadow: ${({ theme }) => theme.shadow.secondary};
+  }
+  box-shadow: ${({ theme }) => theme.shadow.primary};
   padding: var(--padding-big);
   border-radius: var(--padding-big);
-  ${ ({disabled}) => disabled ? "border: 0.15rem solid rgba(160, 0, 0, 1)" : ""}
+  ${({ disabled }) =>
+    disabled ? "border: 0.15rem solid rgba(160, 0, 0, 1)" : ""}
   @media (max-width: 550px) {
     font-size: 90%;
   }
-`
+`;
 
 const StyledInfoContainer = styled.div`
   display: flex;

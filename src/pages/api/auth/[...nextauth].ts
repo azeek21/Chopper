@@ -17,7 +17,6 @@ import customYandexProvider from "@/utils/custom-yandex-provider";
 
 const max_age = "Fri, 31 Dec 9999 21:10:10 GMT";
 
-
 export const authOptions: NextAuthOptions = {
   // Configure one or more authentication providers
   providers: [],
@@ -31,7 +30,7 @@ export const authOptions: NextAuthOptions = {
   },
   callbacks: {
     jwt: async (params: any) => {
-      const user: {uid: string, secret: string} & AdapterUser = params.user;
+      const user: { uid: string; secret: string } & AdapterUser = params.user;
       if (user) {
         params.token.uid = user.uid;
         params.token.secret = user.secret;
@@ -55,12 +54,11 @@ export const authOptions: NextAuthOptions = {
 };
 
 export default async function auth(req: NextApiRequest, res: NextApiResponse) {
-
   return await NextAuth(req, res, {
     ...authOptions,
     providers: [
       customGithubProvider(req, res),
-      customGoogleProvider(req,res),
+      customGoogleProvider(req, res),
       customDiscordProvider(req, res),
       customYandexProvider(req, res),
     ],

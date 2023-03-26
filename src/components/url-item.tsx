@@ -198,7 +198,8 @@ export default function UrlItem({ url }: { url: any }) {
     >
       <LoadingOverlay loading={loading || isLoading}>
         <StyledUrlItem>
-          <CopyField className="url__item__copy"
+          <CopyField
+            className="url__item__copy"
             title={`Copy ${url.url} to Clipboard`}
           >
             <button
@@ -240,7 +241,11 @@ export default function UrlItem({ url }: { url: any }) {
               }}
             >
               <Button type="button">
-                {passwordVisible ? <Visibility fontSize="inherit"/> : <VisibilityOff fontSize="inherit"/>}
+                {passwordVisible ? (
+                  <Visibility fontSize="inherit" />
+                ) : (
+                  <VisibilityOff fontSize="inherit" />
+                )}
               </Button>
             </div>
             <label className="label" htmlFor={url.urlid + "password"}>
@@ -318,7 +323,11 @@ export default function UrlItem({ url }: { url: any }) {
                 }
               }}
             >
-              {deleteContext.deleting ? <Undo fontSize="small" /> : <DeleteIcon fontSize="small" />}
+              {deleteContext.deleting ? (
+                <Undo fontSize="small" />
+              ) : (
+                <DeleteIcon fontSize="small" />
+              )}
               {deleteContext.deleting && (
                 <DeleteContainer active={deleteContext.time_left < 3}>
                   <p>{deleteContext.time_left}</p>
@@ -327,7 +336,6 @@ export default function UrlItem({ url }: { url: any }) {
               )}
             </Button>
           </Controls>
-    
         </StyledUrlItem>
       </LoadingOverlay>
     </form>
@@ -341,7 +349,8 @@ const StyledUrlItem = styled.div`
   svg {
     font-size: 120%;
   }
-  & input, label {
+  & input,
+  label {
     font-size: var(--fs-l);
   }
   width: 100%;
@@ -356,50 +365,49 @@ const StyledUrlItem = styled.div`
   box-shadow: ${({ theme }) => theme.shadow.primary};
   border-radius: var(--padding-normal);
   font-size: var(--fs-xl);
-  
+
   @media (max-width: 997px) {
     grid-gap: var(--padding-normal);
     font-size: var(--fs-l);
-  input {
-    padding-left: var(--padding-gigant);
-  }
-  & input, label {
-    font-size: var(--fs-normal);
-  }
+    input {
+      padding-left: var(--padding-gigant);
+    }
+    & input,
+    label {
+      font-size: var(--fs-normal);
+    }
   }
 
   @media (max-width: 805px) {
+    & .url__item__copy {
+      grid-area: copier;
+    }
 
-  & .url__item__copy {
-    grid-area: copier;
-  }
-
-& .url__item__password {
-    grid-area: password;
-    justify-self: center;
-  }
-  & .url__item__limit {
-    grid-area: limit;
-  }
-  & .url__item__timeout {
-    grid-area: timeout;
-  }
-  & .url__item__controller {
-    grid-area: controls;
-  }
-  grid-template-areas: 'copier password password password controls' ' limit limit timeout timeout timeout';
+    & .url__item__password {
+      grid-area: password;
+      justify-self: center;
+    }
+    & .url__item__limit {
+      grid-area: limit;
+    }
+    & .url__item__timeout {
+      grid-area: timeout;
+    }
+    & .url__item__controller {
+      grid-area: controls;
+    }
+    grid-template-areas: "copier password password password controls" " limit limit timeout timeout timeout";
   }
 
   @media (max-width: 550px) {
     font-size: var(--fs-normal);
-  & input, label {
-    font-size: var(--fs-sm);
-  }
-  grid-template-areas: 'copier copier copier copier controls' ' password password password password password' 'limit limit timeout timeout timeout';
+    & input,
+    label {
+      font-size: var(--fs-sm);
+    }
+    grid-template-areas: "copier copier copier copier controls" " password password password password password" "limit limit timeout timeout timeout";
   }
 `;
-
-
 
 const CopyButton = styled(Button)`
   height: 80%;
@@ -420,7 +428,7 @@ const UrlItemWrapper = styled(FormItemWrapper)`
     &:not(:placeholder-shown) ~ div {
       transform: translate(-110%, -50%);
     }
-  }  
+  }
 `;
 
 const CopyField = styled.div`
@@ -433,13 +441,13 @@ const CopyField = styled.div`
   & h3 {
     -webkit-user-select: all;
     user-select: all;
-  };
+  }
 
   @media (max-width: 550px) {
     font-size: var(--fs-normal);
   }
 
-    @media (max-width: 389px) {
+  @media (max-width: 389px) {
     font-size: var(--fs-sm);
   }
   @media (max-width: 350px) {

@@ -7,8 +7,8 @@ html {
 }
 
 ::selection {
-  background-color: ${({theme}) => theme.textColor.purple};
-  /* background-color: ${({theme}) => theme.backgroundColor.pink}; */
+  background-color: ${({ theme }) => theme.textColor.purple};
+  /* background-color: ${({ theme }) => theme.backgroundColor.pink}; */
   color: white;
 }
 
@@ -174,7 +174,7 @@ section {
   animation: loading ease-in-out 2s infinite;
   background-image: linear-gradient(90deg, rgba(255,255,255,0.0), rgba(128, 0, 128, 0.7), rgba(255,255,255,0.0));
   backdrop-filter: blur(0.1rem);
-  box-shadow:  ${({theme}) => theme.shadow.primary};
+  box-shadow:  ${({ theme }) => theme.shadow.primary};
   background-size: 50%;
   background-repeat: no-repeat;
   border-radius: 0.5rem;
@@ -197,7 +197,7 @@ section {
   line-height: 1rem;
   font-size: var(--fs-normal);
   cursor: text;
-  color: ${({theme})=> theme.textColor.secondary};
+  color: ${({ theme }) => theme.textColor.secondary};
   transition: 200ms ease-in-out;
 }
 
@@ -206,7 +206,7 @@ input:focus ~ .label{
   top: var(--padding-small);
   left: var(--padding-small);
   font-size: var(--fs-sm);
-  color: ${({theme})=> theme.textColor.primary};
+  color: ${({ theme }) => theme.textColor.primary};
 }
 
 input:not(:placeholder-shown) ~ .label{
@@ -214,7 +214,7 @@ input:not(:placeholder-shown) ~ .label{
   top: var(--padding-small);
   left: var(--padding-small);
   font-size: var(--fs-sm);
-  color: ${({theme})=> theme.textColor.primary};
+  color: ${({ theme }) => theme.textColor.primary};
 };
 
 @media (max-width: 1250px) {
@@ -241,4 +241,4 @@ input:not(:placeholder-shown) ~ .label{
   }
 }
 
-`
+`;

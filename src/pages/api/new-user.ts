@@ -5,18 +5,25 @@ import mongoClient from "@/db/connect";
 import CreateUser from "@/db/create-user";
 import generateUserCookies from "@/utils/generate-user-cookies";
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-    const cookies = req.cookies;
-    console.log("WEAK COOKIE ASKED >>>");
-    
-    if (!cookies['weak-uid']) {
-        await mongoClient();
-        const user = await CreateUser();
-        await user.save();
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  const cookies = req.cookies;
+  console.log("WEAK COOKIE ASKED >>>");
 
-        const userCookies = generateUserCookies(user);
+  if (!cookies["weak-uid"]) {
+    await mongoClient();
+    const user = await CreateUser();
+    await user.save();
 
-        res.setHeader("Set-Cookie", [userCookies.uid, userCookies.secret, userCookies.registered]);
-    }
-    return res.status(200).json({success: "ok"});
-};
+    const userCookies = generateUserCookies(user);
+
+    res.setHeader("Set-Cookie", [
+      userCookies.uid,
+      userCookies.secret,
+      userCookies.registered,
+    ]);
+  }
+  return res.status(200).json({ success: "ok" });
+}

@@ -91,10 +91,7 @@ function Profile() {
           }}
         >
           <div className="profile__image">
-            
-              <StyledProfilePicture
-                src={session.user.image || ""}
-              />
+            <StyledProfilePicture src={session.user.image || ""} />
           </div>
           <div className="profile__actions__container">
             <span

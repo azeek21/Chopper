@@ -7,7 +7,15 @@ import CreateUser from "@/db/create-user";
 import dayjs from "dayjs";
 import getUser from "@/db/get-user";
 import generateUserCookies from "@/utils/generate-user-cookies";
-import { addRetryObject, createRetryObject, deleteRetryObject, getRetryObject, isAllowable, resetUserRetries, updateRetryObject } from "@/utils/retries";
+import {
+  addRetryObject,
+  createRetryObject,
+  deleteRetryObject,
+  getRetryObject,
+  isAllowable,
+  resetUserRetries,
+  updateRetryObject,
+} from "@/utils/retries";
 
 export default async function handler(
   req: NextApiRequest,
@@ -15,8 +23,8 @@ export default async function handler(
 ) {
   // stop and return 404 if reqest is not a POST
   if (req.method != "POST") {
-    res.status(400).json({ message: "Bad request"});
-    return ;
+    res.status(400).json({ message: "Bad request" });
+    return;
   }
 
   console.log("POST>>>");
@@ -56,7 +64,7 @@ export default async function handler(
     await url.save();
     // redirect ;
     res.redirect(url.to_url);
-    return ;
+    return;
   }
 
   // if url is password protected
@@ -69,20 +77,26 @@ export default async function handler(
       user = await CreateUser();
       await user.save();
       const userCookies = generateUserCookies(user);
-      res.setHeader("Set-Cookie", [userCookies.uid, userCookies.secret, userCookies.registered]);
+      res.setHeader("Set-Cookie", [
+        userCookies.uid,
+        userCookies.secret,
+        userCookies.registered,
+      ]);
     }
     console.log("USER FETCHED >>>");
 
     // check if user has been retrying;
     if (!isAllowable(user, url.urlid)) {
-      res.status(400).json({ message: "You are not allowed. Due to too many failed tries."})
-      return ;
+      res.status(400).json({
+        message: "You are not allowed. Due to too many failed tries.",
+      });
+      return;
     }
     console.log("USER ALLOWABLE >>>");
-  
+
     const user_password = req.body.password;
     console.log("USER PROVIDED PASSWORD: " + user_password);
-  
+
     // check if user provided password
     if (!user_password) {
       res.status(404).json({ error: "Password not provided" });
@@ -91,20 +105,24 @@ export default async function handler(
 
     // if password didn't match
     if (user_password != url.password) {
-      console.log("PASSWORD DIDNT MATCH " + user_password as string + " VS " + url.password);
-      
+      console.log(
+        (("PASSWORD DIDNT MATCH " + user_password) as string) +
+          " VS " +
+          url.password
+      );
+
       const retryObject = getRetryObject(user, url.urlid);
       // if this is first try
       if (!retryObject) {
         console.log("RETRY OBJECT NOT FOUND, PUTTING NEW...");
-        
+
         let newRetryObject = createRetryObject(url.urlid);
         newRetryObject.count += 1;
         addRetryObject(user, newRetryObject);
         await user.save();
         res.status(400).redirect("/" + url.urlid);
-        return ;
-      };
+        return;
+      }
 
       console.log("RETRY OBJECT FOUND:", retryObject);
 
@@ -116,14 +134,16 @@ export default async function handler(
         if (!retryObject.last_cooldown_duration) {
           retryObject.last_cooldown_duration = 60 * 3; // three minutes
         } else {
-          retryObject.last_cooldown_duration = retryObject.last_cooldown_duration * 2;
-        };
-        retryObject.cools_at = dayjs().unix() + retryObject.last_cooldown_duration;
+          retryObject.last_cooldown_duration =
+            retryObject.last_cooldown_duration * 2;
+        }
+        retryObject.cools_at =
+          dayjs().unix() + retryObject.last_cooldown_duration;
         retryObject.count = 0;
         updateRetryObject(user, retryObject);
         await user.save();
         res.redirect("/" + url.urlid);
-        return ;
+        return;
       }
 
       console.log("RETRY COUNT -> ", retryObject.count);
@@ -132,8 +152,8 @@ export default async function handler(
       updateRetryObject(user, retryObject);
       await user.save();
       res.status(400).redirect("/" + url.urlid);
-      return ;
-    };
+      return;
+    }
 
     // if password matches
     if (user_password === url.password) {
@@ -144,10 +164,10 @@ export default async function handler(
       if (req.body.remember) {
         if (!user.has_access_to) {
           user.has_access_to = [url.urlid];
-        } else if ( !(user.has_access_to.includes(url.urlid)) ) {
+        } else if (!user.has_access_to.includes(url.urlid)) {
           user.has_access_to.push(url.urlid);
         }
-      };
+      }
 
       url.clicks += 1;
       try {
@@ -158,7 +178,7 @@ export default async function handler(
         // a good example can be a telegram bot which sends you message in case of anything bad ...
       }
       res.status(200).redirect(url.to_url);
-      return ;
+      return;
     }
   }
 }

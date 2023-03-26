@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { getCookie } from "@/utils/cookie";
 import { QueryClient, QueryClientProvider } from "react-query";
 import Footer from "@/components/footer";
-import { SessionProvider } from 'next-auth/react';
+import { SessionProvider } from "next-auth/react";
 
 const Qclient = new QueryClient();
 
@@ -24,11 +24,11 @@ export default function App({ Component, pageProps }: AppProps) {
     // }, 10000);
 
     const essentialCookie = async () => {
-      console.log('CHECKING COOKIE IN BROWSER >>>');
-      
+      console.log("CHECKING COOKIE IN BROWSER >>>");
+
       if (getCookie()?.noCookie && !pageProps.session) {
         console.log("NO COOKIE, ASKING ...");
-        
+
         try {
           const res = await (await fetch("/api/new-user")).json();
         } catch (error) {
@@ -40,24 +40,23 @@ export default function App({ Component, pageProps }: AppProps) {
     };
 
     essentialCookie();
-    
   }, []);
 
   console.log("PAGEPROP SESSION >>>");
   console.log(pageProps.session);
-  
+
   return (
     <>
-    <SessionProvider session={pageProps.session}>
-      <QueryClientProvider client={Qclient}>
-        <ThemeProvider theme={THEME["light"]}>
-          <GlobalStyle />
-          <Header />
-          <Component {...pageProps} />
-          {popup && <Cookie />}
-          <Footer />
-        </ThemeProvider>
-      </QueryClientProvider>
+      <SessionProvider session={pageProps.session}>
+        <QueryClientProvider client={Qclient}>
+          <ThemeProvider theme={THEME["light"]}>
+            <GlobalStyle />
+            <Header />
+            <Component {...pageProps} />
+            {popup && <Cookie />}
+            <Footer />
+          </ThemeProvider>
+        </QueryClientProvider>
       </SessionProvider>
     </>
   );

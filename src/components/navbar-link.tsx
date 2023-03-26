@@ -13,7 +13,7 @@ export default function NavbarLink({
   href: string;
   name: string;
   clickHandler?: () => void;
-  Icon?: React.FC
+  Icon?: React.FC;
 }) {
   const router = useRouter();
 
@@ -72,5 +72,5 @@ const StyledNavbarLink = styled.li<{
         display: none;
       }
     }
-}
+  }
 `;
