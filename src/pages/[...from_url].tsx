@@ -51,7 +51,7 @@ export default function RedirectTo(props: RedirectToPropsType) {
           i--;
           setLeftTime(i);
         } else {
-          clearInterval(i);
+          clearInterval(leftTimeTimeout);
           setLeftTime(0);
         }
       }, 1000);

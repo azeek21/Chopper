@@ -12,7 +12,7 @@ import { useQuery } from "react-query";
 import styled from "styled-components";
 
 export default function Dashboard({ urls }: { urls: URL_DATA_INTERFACE[] }) {
-  const { data, isLoading, error } = useQuery<URL_DATA_INTERFACE[]>(
+  const { data } = useQuery<URL_DATA_INTERFACE[]>(
     "urls",
     async () => {
       const fetchedUrls = await (await fetch("/api/urls/get/")).json();

@@ -6,6 +6,5 @@
   "rules": {
     "no-unused-vars": "warn",
     "no-useless-escape": "warn"
-  },
-  "plugins": ["prettier"]
+  }
 }

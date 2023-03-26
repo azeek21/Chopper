@@ -1,5 +1,4 @@
 import UrlModel, { URL_DATA_INTERFACE } from "@/db/models/url-model";
-import { serialize } from "cookie";
 import { HydratedDocument } from "mongoose";
 import { NextApiRequest, NextApiResponse } from "next";
 import mongoClient from "@/db/connect";
@@ -13,7 +12,6 @@ import {
   deleteRetryObject,
   getRetryObject,
   isAllowable,
-  resetUserRetries,
   updateRetryObject,
 } from "@/utils/retries";
 

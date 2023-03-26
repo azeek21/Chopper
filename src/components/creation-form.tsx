@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import Input from "./input";
 import Button from "./button";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import LoadingOverlay from "./loading-overlay";
 import {
   Link,
@@ -11,7 +11,6 @@ import {
   LinkOff,
   Update,
 } from "@mui/icons-material";
-import { getCookie } from "@/utils/cookie";
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import { useMutation, useQueryClient } from "react-query";
 
@@ -35,7 +34,6 @@ export default function CreationForm() {
 
   const [loading, setLoading] = useState(false);
   const [expanded, setExpanded] = useState(false);
-  const [_, setHasCookies] = useState(false);
   const queryClient = useQueryClient();
   const mutatator = useMutation(
     async () => {
@@ -61,17 +59,6 @@ export default function CreationForm() {
       },
     }
   );
-
-  useEffect(() => {
-    const x = () => {
-      const res = getCookie();
-      if (!res || res.noCookie) {
-        return false;
-      }
-      return true;
-    };
-    setHasCookies(x);
-  }, []);
 
   const changeHandler = (ev: ChangeEvent<HTMLInputElement>) => {
     setForm((oldForm) => {

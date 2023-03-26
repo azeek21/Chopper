@@ -1,6 +1,4 @@
-import { randomUUID } from "crypto";
 import { NextApiRequest, NextApiResponse } from "next";
-import { serialize, parse } from "cookie";
 import mongoClient from "@/db/connect";
 import CreateUser from "@/db/create-user";
 import generateUserCookies from "@/utils/generate-user-cookies";

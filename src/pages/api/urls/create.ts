@@ -12,8 +12,6 @@ export default async function handler(
 ) {
   const method = req.method;
 
-  const uid = req.cookies;
-
   if (method == "POST") {
     const data = JSON.parse(req.body);
 

@@ -1,21 +1,12 @@
-import mongoClient from "@/db/connect";
-import getUser from "@/db/get-user";
-import { PROVIDER_INTERFACE, USER_INTERFACE } from "@/db/models/user-model";
 import clientPromise from "@/lib/mongodb";
-import { userHasProvider } from "@/utils/provider-utils";
 import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
-import { serialize } from "cookie";
-import dayjs from "dayjs";
-import { HydratedDocument } from "mongoose";
 import { NextApiRequest, NextApiResponse } from "next";
-import NextAuth, { AuthOptions, NextAuthOptions } from "next-auth";
+import NextAuth, { NextAuthOptions } from "next-auth";
 import { AdapterUser } from "next-auth/adapters";
 import customGithubProvider from "@/utils/custom-github-provider";
 import customGoogleProvider from "@/utils/custom-google-provider";
 import customDiscordProvider from "@/utils/custom-discord-provider";
 import customYandexProvider from "@/utils/custom-yandex-provider";
-
-const max_age = "Fri, 31 Dec 9999 21:10:10 GMT";
 
 export const authOptions: NextAuthOptions = {
   // Configure one or more authentication providers
@@ -37,7 +28,7 @@ export const authOptions: NextAuthOptions = {
       }
       return params.token;
     },
-    session: async ({ session, user, token }) => {
+    session: async ({ session, token }) => {
       if (session.user) {
         session.user.uid = token.uid as string;
         session.user.secret = token.secret as string;

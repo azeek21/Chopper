@@ -1,12 +1,7 @@
 import Button from "@/components/button";
 import CreationForm from "@/components/creation-form";
 import styled from "styled-components";
-import {
-  ContentCopy,
-  Link as LinkIcon,
-  Grade,
-  ReadMore,
-} from "@mui/icons-material";
+import { ContentCopy, Grade, ReadMore } from "@mui/icons-material";
 import Title from "@/components/title";
 import { useEffect, useState } from "react";
 import typeWriter from "@/utils/typewriter";
