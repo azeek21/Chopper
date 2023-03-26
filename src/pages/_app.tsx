@@ -1,13 +1,13 @@
-import type { AppProps } from "next/app";
-import THEME from "@/styles/theme/theme";
-import { ThemeProvider } from "styled-components";
-import { GlobalStyle } from "@/styles/global";
-import Header from "@/components/header";
-import { useEffect } from "react";
-import { getCookie } from "@/utils/cookie";
-import { QueryClient, QueryClientProvider } from "react-query";
 import Footer from "@/components/footer";
+import Header from "@/components/header";
+import { GlobalStyle } from "@/styles/global";
+import THEME from "@/styles/theme/theme";
+import { getCookie } from "@/utils/cookie";
 import { SessionProvider } from "next-auth/react";
+import type { AppProps } from "next/app";
+import { useEffect } from "react";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { ThemeProvider } from "styled-components";
 
 const Qclient = new QueryClient();
 
