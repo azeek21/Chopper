@@ -50,7 +50,8 @@
     "@types/js-cookie": "^3.0.3",
     "@types/styled-components": "^5.1.26",
     "babel-plugin-styled-components": "^2.0.7",
-    "prettier": "^2.8.6",
-    "husky": "^8.0.3"
+    "eslint-plugin-prettier": "^4.2.1",
+    "husky": "^8.0.3",
+    "prettier": "^2.8.7"
   }
 }

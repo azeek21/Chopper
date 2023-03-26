@@ -27,8 +27,6 @@ export default async function handler(
     return;
   }
 
-  console.log("POST>>>");
-  console.log(req.query.urlid);
 
   await mongoClient();
 
@@ -70,7 +68,6 @@ export default async function handler(
   // if url is password protected
   if (url.password) {
     // get and check if user eixsts;
-    console.log("PROTECTING >>>");
     let user = await getUser(req);
     if (!user) {
       // if user doesn't exist, put cookies so that we can recognise user later
@@ -83,7 +80,6 @@ export default async function handler(
         userCookies.registered,
       ]);
     }
-    console.log("USER FETCHED >>>");
 
     // check if user has been retrying;
     if (!isAllowable(user, url.urlid)) {
@@ -92,10 +88,8 @@ export default async function handler(
       });
       return;
     }
-    console.log("USER ALLOWABLE >>>");
 
     const user_password = req.body.password;
-    console.log("USER PROVIDED PASSWORD: " + user_password);
 
     // check if user provided password
     if (!user_password) {
@@ -105,16 +99,10 @@ export default async function handler(
 
     // if password didn't match
     if (user_password != url.password) {
-      console.log(
-        (("PASSWORD DIDNT MATCH " + user_password) as string) +
-          " VS " +
-          url.password
-      );
-
+   
       const retryObject = getRetryObject(user, url.urlid);
       // if this is first try
       if (!retryObject) {
-        console.log("RETRY OBJECT NOT FOUND, PUTTING NEW...");
 
         let newRetryObject = createRetryObject(url.urlid);
         newRetryObject.count += 1;
@@ -124,7 +112,6 @@ export default async function handler(
         return;
       }
 
-      console.log("RETRY OBJECT FOUND:", retryObject);
 
       // add 1 to retry count cuz password was wrong
       retryObject.count += 1;
@@ -146,7 +133,6 @@ export default async function handler(
         return;
       }
 
-      console.log("RETRY COUNT -> ", retryObject.count);
 
       // password didn't match but retry count was not reached, update retry object with just incremented retry.count;
       updateRetryObject(user, retryObject);

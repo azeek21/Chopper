@@ -13,9 +13,6 @@ export default function customDiscordProvider(
     clientId: process.env.DISCORD_CLIENT_ID!,
     clientSecret: process.env.DISCORD_CLIENT_SECRET!,
     profile: async (profile) => {
-      console.log("DISCORD PROFILE");
-      console.log(profile);
-      console.log("----------");
       await mongoClient();
 
       const user = await getUser(req, {

@@ -1,5 +1,4 @@
 import { HydratedDocument } from "mongoose";
-import getUser from "./get-user";
 import UrlModel from "./models/url-model";
 import { USER_INTERFACE } from "./models/user-model";
 

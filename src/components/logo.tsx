@@ -1,7 +1,5 @@
 import Link from "next/link";
 import styled from "styled-components";
-import { Language } from "@mui/icons-material";
-import Image from "next/image";
 
 export default function Logo() {
   return (

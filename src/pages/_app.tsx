@@ -24,13 +24,11 @@ export default function App({ Component, pageProps }: AppProps) {
     // }, 10000);
 
     const essentialCookie = async () => {
-      console.log("CHECKING COOKIE IN BROWSER >>>");
 
       if (getCookie()?.noCookie && !pageProps.session) {
-        console.log("NO COOKIE, ASKING ...");
 
         try {
-          const res = await (await fetch("/api/new-user")).json();
+          await (await fetch("/api/new-user")).json();
         } catch (error) {
           alert(
             "FATAL: maybe you don't have internet connection. Please, try reloading the page. If error persists plase report it to pymanuz@gmail.com. I'll reply ASAP."
@@ -42,8 +40,6 @@ export default function App({ Component, pageProps }: AppProps) {
     essentialCookie();
   }, []);
 
-  console.log("PAGEPROP SESSION >>>");
-  console.log(pageProps.session);
 
   return (
     <>

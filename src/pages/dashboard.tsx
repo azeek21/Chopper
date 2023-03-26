@@ -16,8 +16,6 @@ export default function Dashboard({ urls }: { urls: URL_DATA_INTERFACE[] }) {
     "urls",
     async () => {
       const fetchedUrls = await (await fetch("/api/urls/get/")).json();
-      console.log("CLIENT SIDE URLS=>");
-      console.log(fetchedUrls);
 
       if (fetchedUrls.error) {
         return [];
@@ -92,8 +90,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   }
 
   const urls = await getUrls(context.req as NextApiRequest, user);
-  console.log("SERVER SIDE URLS =>");
-  console.log(urls);
 
   return {
     props: {

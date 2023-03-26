@@ -13,9 +13,6 @@ export default function customGoogleProvider(
     clientId: process.env.GOOGLE_CLIENT_ID!,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     profile: async (profile) => {
-      console.log("GOOGLE PROVIDER >>>");
-      console.log(profile);
-      console.log("-------------------G-");
       await mongoClient();
 
       const user = await getUser(req, {

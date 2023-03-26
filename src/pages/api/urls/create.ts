@@ -13,22 +13,17 @@ export default async function handler(
   const method = req.method;
 
   const uid = req.cookies;
-  console.log(uid);
 
   if (method == "POST") {
     const data = JSON.parse(req.body);
-    console.log("RECEIVED >>>");
 
-    console.log(data);
 
     if (!data.to_url) {
       return res.status(400).json({ error: "Missing to_url!" });
     }
     await mongoClient();
-    console.log("FETCHING USER IN CREATE URL >>>");
     const user = await getUser(req);
     if (!user) {
-      console.log("FAILED TO FETCH USER IN CREATE URL >>>");
       res.status(400).json({ error: "Bad request, No user found." });
       return;
     }

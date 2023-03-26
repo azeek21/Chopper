@@ -5,6 +5,7 @@
   },
   "rules": {
     "no-unused-vars": "warn",
-    "no-console": "warn"
-  }
+    "no-useless-escape": "warn"
+  },
+  "plugins": ["prettier"]
 }

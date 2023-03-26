@@ -9,8 +9,6 @@ export default async function handleCopy(
   profile: { name: string | null; email: string | null; image?: string }
 ) {
   if (user && !userHasProvider(user, provider)) {
-    console.log("USER EXISTS, COPYING DATA>>>");
-    console.log(user);
     user.registered = true;
     user.email = profile.email || user.email || undefined;
     user.name = profile.name || user.name || undefined;

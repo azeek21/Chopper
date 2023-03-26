@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import Input from "./input";
 import Button from "./button";
-import { ChangeEvent, useContext, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import LoadingOverlay from "./loading-overlay";
 import {
   Link,
@@ -9,7 +9,6 @@ import {
   Visibility,
   VisibilityOff,
   LinkOff,
-  ManageHistory,
   Update,
 } from "@mui/icons-material";
 import { getCookie } from "@/utils/cookie";
@@ -33,11 +32,10 @@ const initialFormState = {
 export default function CreationForm() {
   const [form, setForm] = useState<FORM_TYPE>(initialFormState);
   const [passwordVisible, setPasswordVisible] = useState(false);
-  console.log("SSR -------------");
 
   const [loading, setLoading] = useState(false);
   const [expanded, setExpanded] = useState(false);
-  const [hasCookies, setHasCookies] = useState(false);
+  const [_, setHasCookies] = useState(false);
   const queryClient = useQueryClient();
   const mutatator = useMutation(
     async () => {

@@ -10,7 +10,6 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const cookies = req.cookies;
-  console.log("WEAK COOKIE ASKED >>>");
 
   if (!cookies["weak-uid"]) {
     await mongoClient();

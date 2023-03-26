@@ -49,8 +49,8 @@ export default function Cookie() {
       <h4>Want some chocolate ?</h4>
       <CookieText>
         Oh, no. I just ran out of chocolates :(. But I can give you a handfull
-        of cookies. If you agree, you'll get to manage your URL's. Othervise,
-        you'll lose control over your URL's after you create them.
+        of cookies. If you agree, you`&apos;`ll get to manage your URL`&apos;`s. Othervise,
+        you`&apos;`ll lose control over your URL`&apos;`s after you create them.
       </CookieText>
       <LoadingOverlay loading={loading}>
         <ButtonContainer>

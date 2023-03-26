@@ -21,16 +21,12 @@ export default function Index() {
     "lastAdded",
     async () => {
       if (getCookie()?.noCookie) {
-        console.log("NO COOKIE TO FETCH LAST, THROWING ...");
         return null;
       }
-      console.log("USER FOUND. FETCHING LAST >>>");
       const lastUrl = await (await fetch("/api/urls/get/last")).json();
       if (lastUrl.error) {
-        console.log("NO LAST URL, THROWING ...");
         return null;
       }
-      console.log("LAST >>>");
 
       return lastUrl;
     },
@@ -103,7 +99,6 @@ export default function Index() {
         )}
         <CreationForm />
       </ContentWrapper>
-      {false ? <h1>Yes</h1> : null}
     </StyledHome>
   );
 }

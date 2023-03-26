@@ -18,7 +18,7 @@ import {
   RepeatOn as RepeatOnIcon,
 } from "@mui/icons-material";
 import getUser from "@/db/get-user";
-import { getRetryObject, isAllowable } from "@/utils/retries";
+import { getRetryObject } from "@/utils/retries";
 
 type RedirectToPropsType = {
   id: string;
@@ -38,8 +38,6 @@ export default function RedirectTo(props: RedirectToPropsType) {
     return 0;
   });
 
-  console.log(props);
-
   const changeHandler = (ev: ChangeEvent<HTMLInputElement>) => {
     setPassword(ev.target.value);
   };
@@ -52,7 +50,6 @@ export default function RedirectTo(props: RedirectToPropsType) {
         if (i >= 0) {
           i--;
           setLeftTime(i);
-          console.log(i);
         } else {
           clearInterval(i);
           setLeftTime(0);
@@ -208,7 +205,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   let dest_id = context.query.from_url;
 
   if (!dest_id || (typeof dest_id == "object" && dest_id.length > 1)) {
-    console.log("1>>>");
 
     return {
       notFound: true,
@@ -255,7 +251,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       }
 
       const retryObject = getRetryObject(user, doc.urlid);
-      console.log("RETRY OBJECT: ", retryObject);
 
       if (!retryObject) {
         return {
@@ -276,7 +271,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
     doc.clicks = doc.clicks + 1;
     await doc.save();
-    console.log(doc);
     return {
       redirect: {
         destination: doc.to_url,

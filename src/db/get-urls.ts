@@ -17,7 +17,6 @@ export default async function getUrls(
   }
 
   let urls: Array<URL_DATA_INTERFACE> = [];
-  const owner = user.uid;
   let tmpUrl;
 
   for (let i = 0; i < user.urls.length; i++) {

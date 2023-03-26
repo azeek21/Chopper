@@ -2,8 +2,6 @@ import styled from "styled-components";
 import {
   Favorite,
   GitHub,
-  Email,
-  EmailOutlined,
   EmailRounded,
   Telegram,
   StarOutline,

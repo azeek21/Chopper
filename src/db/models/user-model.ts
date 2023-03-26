@@ -1,5 +1,4 @@
 import { Schema, model, models } from "mongoose";
-import { URL_DATA_INTERFACE } from "./url-model";
 
 export interface Retry_Interface {
   urlid: string;
@@ -38,6 +37,7 @@ export interface USER_INTERFACE {
 const UserSchema = new Schema<USER_INTERFACE>({
   uid: {
     type: String,
+
     required: true,
   },
   registered: {

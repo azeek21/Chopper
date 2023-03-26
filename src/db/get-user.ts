@@ -1,7 +1,6 @@
 import { HydratedDocument } from "mongoose";
 import { NextApiRequest } from "next";
 import UserModel, { USER_INTERFACE } from "./models/user-model";
-import { getSession } from "next-auth/react";
 import { getToken } from "next-auth/jwt";
 
 export interface PROVIDER_OPTIONS {
@@ -37,7 +36,6 @@ export default async function getUser(
   secret = cookies["weak-secret"];
 
   if (!uid) {
-    console.log("GET USER: USER >>>");
     const session = await getToken({ req });
     if (session) {
       secret = session.secret as string | undefined;
@@ -55,7 +53,7 @@ export default async function getUser(
       secret: secret,
     }).exec();
   } catch (err) {
-    console.error(err);
+    // TODO do something about this
   }
 
   return user;

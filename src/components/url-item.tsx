@@ -1,4 +1,3 @@
-import { URL_DATA_INTERFACE } from "@/db/models/url-model";
 import {
   Key,
   Visibility,
@@ -12,7 +11,7 @@ import {
   Undo,
   Timelapse,
 } from "@mui/icons-material";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { FormItemWrapper } from "./creation-form";
 import Input from "./input";
 import Button from "./button";
@@ -61,11 +60,9 @@ export default function UrlItem({ url }: { url: any }) {
       if (newUrl.error) {
         return null;
       }
-      console.log(newUrl.timeout);
       newUrl.timeout = newUrl.timeout
         ? dayjs.unix(newUrl.timeout).format("YYYY-MM-DD")
         : "";
-      console.log(newUrl.timeout);
 
       return newUrl;
     },
@@ -125,7 +122,6 @@ export default function UrlItem({ url }: { url: any }) {
     let i = deleteContext.time_left;
 
     const deleteTimeout = setInterval(() => {
-      console.log("IN INTERVAL>>> ", i);
 
       if (i == 0) {
         remove.mutate();
@@ -407,10 +403,6 @@ const StyledUrlItem = styled.div`
     }
     grid-template-areas: "copier copier copier copier controls" " password password password password password" "limit limit timeout timeout timeout";
   }
-`;
-
-const CopyButton = styled(Button)`
-  height: 80%;
 `;
 
 const UrlItemWrapper = styled(FormItemWrapper)`

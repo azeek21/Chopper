@@ -2,7 +2,6 @@ import styled from "styled-components";
 import LoadingOverlay from "./loading-overlay";
 import { signIn, signOut, useSession } from "next-auth/react";
 import NavbarLink from "./navbar-link";
-import { useEffect, useState } from "react";
 import {
   Home,
   NotificationsActive,
@@ -10,9 +9,7 @@ import {
   Login,
   Logout,
   PersonAddAlt1,
-  AccountCircle,
 } from "@mui/icons-material";
-import { DefaultUser, Session, User } from "next-auth";
 import Link from "next/link";
 
 export default function Navbar() {
@@ -45,19 +42,13 @@ const StyledNavbar = styled.ul`
   }
 `;
 
-function PfP(src: string) {
-  return <StyledProfilePicture src={src} />;
-}
-
 function Profile() {
   const { data: session, status: status } = useSession();
 
   const customSignOut = async () => {
-    const newCookies = await fetch("/api/new-user");
+    await fetch("/api/new-user");
     signOut();
   };
-  console.log("PROFILE SESSION>>>");
-  console.log(session);
 
   if (!session) {
     return (
