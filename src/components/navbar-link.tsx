@@ -1,8 +1,7 @@
 import { useRouter } from "next/router";
 import Link from "next/link";
-import styled, { ThemedStyledProps } from "styled-components";
+import styled from "styled-components";
 import { THEME_TYPE } from "@/styles/theme/theme";
-import { ReactComponentElement } from "react";
 
 export default function NavbarLink({
   href,

@@ -17,7 +17,6 @@ export default async function handler(
   if (method == "POST") {
     const data = JSON.parse(req.body);
 
-
     if (!data.to_url) {
       return res.status(400).json({ error: "Missing to_url!" });
     }

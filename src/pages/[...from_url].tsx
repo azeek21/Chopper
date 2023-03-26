@@ -205,7 +205,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   let dest_id = context.query.from_url;
 
   if (!dest_id || (typeof dest_id == "object" && dest_id.length > 1)) {
-
     return {
       notFound: true,
     };

@@ -24,9 +24,7 @@ export default function App({ Component, pageProps }: AppProps) {
     // }, 10000);
 
     const essentialCookie = async () => {
-
       if (getCookie()?.noCookie && !pageProps.session) {
-
         try {
           await (await fetch("/api/new-user")).json();
         } catch (error) {
@@ -39,7 +37,6 @@ export default function App({ Component, pageProps }: AppProps) {
 
     essentialCookie();
   }, []);
-
 
   return (
     <>

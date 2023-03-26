@@ -122,7 +122,6 @@ export default function UrlItem({ url }: { url: any }) {
     let i = deleteContext.time_left;
 
     const deleteTimeout = setInterval(() => {
-
       if (i == 0) {
         remove.mutate();
         clearInterval(deleteTimeout);

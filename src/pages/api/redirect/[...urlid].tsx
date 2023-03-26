@@ -27,7 +27,6 @@ export default async function handler(
     return;
   }
 
-
   await mongoClient();
 
   // get url from db
@@ -99,11 +98,9 @@ export default async function handler(
 
     // if password didn't match
     if (user_password != url.password) {
-   
       const retryObject = getRetryObject(user, url.urlid);
       // if this is first try
       if (!retryObject) {
-
         let newRetryObject = createRetryObject(url.urlid);
         newRetryObject.count += 1;
         addRetryObject(user, newRetryObject);
@@ -111,7 +108,6 @@ export default async function handler(
         res.status(400).redirect("/" + url.urlid);
         return;
       }
-
 
       // add 1 to retry count cuz password was wrong
       retryObject.count += 1;
@@ -132,7 +128,6 @@ export default async function handler(
         res.redirect("/" + url.urlid);
         return;
       }
-
 
       // password didn't match but retry count was not reached, update retry object with just incremented retry.count;
       updateRetryObject(user, retryObject);
