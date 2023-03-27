@@ -1,14 +1,14 @@
 import Button from "@/components/button";
 import CreationForm from "@/components/creation-form";
-import styled from "styled-components";
-import { ContentCopy, Grade, ReadMore } from "@mui/icons-material";
-import Title from "@/components/title";
-import { useEffect, useState } from "react";
-import typeWriter from "@/utils/typewriter";
-import Link from "next/link";
-import { useQuery } from "react-query";
 import LoadingOverlay from "@/components/loading-overlay";
+import Title from "@/components/title";
 import { getCookie } from "@/utils/cookie";
+import typeWriter from "@/utils/typewriter";
+import { ContentCopy, Grade, ReadMore } from "@mui/icons-material";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { useQuery } from "react-query";
+import styled from "styled-components";
 
 export default function Index() {
   const [copied, setCopied] = useState(false);
@@ -29,6 +29,8 @@ export default function Index() {
       onSuccess: () => {
         setCopied(false);
       },
+      retryDelay: 1000,
+      retry: true,
     }
   );
 
@@ -51,7 +53,7 @@ export default function Index() {
   useEffect(() => {
     setTimeout(() => {
       typeWriter();
-    }, 1000);
+    }, 1500);
   }, []);
 
   return (

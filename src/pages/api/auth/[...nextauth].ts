@@ -1,12 +1,12 @@
 import clientPromise from "@/lib/mongodb";
+import customDiscordProvider from "@/utils/custom-discord-provider";
+import customGithubProvider from "@/utils/custom-github-provider";
+import customGoogleProvider from "@/utils/custom-google-provider";
+import customYandexProvider from "@/utils/custom-yandex-provider";
 import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
 import { NextApiRequest, NextApiResponse } from "next";
 import NextAuth, { NextAuthOptions } from "next-auth";
 import { AdapterUser } from "next-auth/adapters";
-import customGithubProvider from "@/utils/custom-github-provider";
-import customGoogleProvider from "@/utils/custom-google-provider";
-import customDiscordProvider from "@/utils/custom-discord-provider";
-import customYandexProvider from "@/utils/custom-yandex-provider";
 
 export const authOptions: NextAuthOptions = {
   // Configure one or more authentication providers
