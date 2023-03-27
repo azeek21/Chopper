@@ -1,18 +1,19 @@
-import styled from "styled-components";
-import Input from "./input";
-import Button from "./button";
-import { ChangeEvent, useState } from "react";
-import LoadingOverlay from "./loading-overlay";
 import {
-  Link,
+  ExpandLess,
+  ExpandMore,
   Key,
-  Visibility,
-  VisibilityOff,
+  Link,
   LinkOff,
   Update,
+  Visibility,
+  VisibilityOff,
 } from "@mui/icons-material";
-import { ExpandLess, ExpandMore } from "@mui/icons-material";
+import { ChangeEvent, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
+import styled from "styled-components";
+import Button from "./button";
+import Input from "./input";
+import LoadingOverlay from "./loading-overlay";
 
 type FORM_TYPE = {
   to_url: string;
@@ -151,6 +152,7 @@ export default function CreationForm() {
               {expanded ? <ExpandLess /> : <ExpandMore />}
             </Button>
 
+            {/* TIMEOUT INPUT */}
             <FormItemWrapper>
               <Input
                 type={"date"}
@@ -229,8 +231,6 @@ export default function CreationForm() {
                 <LinkOff />{" "}
               </span>
             </FormItemWrapper>
-
-            {/* TIMEOUT INPUT */}
           </>
         )}
       </StyledCreationForm>

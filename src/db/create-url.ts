@@ -1,7 +1,6 @@
-import UrlModel from "./models/url-model";
-import { URL_DATA_INTERFACE } from "./models/url-model";
-import { HydratedDocument } from "mongoose";
 import newUrlId from "@/utils/new-from-url";
+import { HydratedDocument } from "mongoose";
+import UrlModel, { URL_DATA_INTERFACE } from "./models/url-model";
 
 type CreateUrlOptions = {
   password?: string;
@@ -18,7 +17,7 @@ export default async function CreateUrl(
     .sort({ created_at: "desc" })
     .exec();
   const urlid = newUrlId(last?.urlid || "");
-  const domain = process.env.DOMAIN;
+  const domain = process.env.NEXTAUTH_URL;
   if (!domain) {
     throw new Error(
       "DOMAIN NOT FOUND IN ENVIROMENT. PELASE CHECK IF DOMAIN PROPERY EXISTS IN .env.local FILE"
