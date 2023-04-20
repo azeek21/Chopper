@@ -1,7 +1,7 @@
 import { HydratedDocument } from "mongoose";
 import { NextApiRequest } from "next";
-import UserModel, { USER_INTERFACE } from "./models/user-model";
 import { getToken } from "next-auth/jwt";
+import UserModel, { USER_INTERFACE } from "./models/user-model";
 
 export interface PROVIDER_OPTIONS {
   id: string;
@@ -34,8 +34,13 @@ export default async function getUser(
 
   uid = cookies["weak-uid"];
   secret = cookies["weak-secret"];
+  const registered = cookies["weak-registered"];
 
-  if (!uid) {
+  if (!registered && !uid) {
+    return null;
+  }
+
+  if (!uid && registered) {
     const session = await getToken({ req });
     if (session) {
       secret = session.secret as string | undefined;
