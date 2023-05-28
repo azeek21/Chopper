@@ -1,7 +1,6 @@
 import clientPromise from "@/lib/mongodb";
 import customDiscordProvider from "@/utils/custom-discord-provider";
 import customGithubProvider from "@/utils/custom-github-provider";
-import customGoogleProvider from "@/utils/custom-google-provider";
 import customYandexProvider from "@/utils/custom-yandex-provider";
 import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
 import { NextApiRequest, NextApiResponse } from "next";
@@ -49,7 +48,6 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
     ...authOptions,
     providers: [
       customGithubProvider(req, res),
-      customGoogleProvider(req, res),
       customDiscordProvider(req, res),
       customYandexProvider(req, res),
     ],

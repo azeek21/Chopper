@@ -1,9 +1,9 @@
-import YandexProvider from "next-auth/providers/yandex";
 import mongoClient from "@/db/connect";
-import removeCookies from "./remove-cookies";
-import handleCopy from "./handle-user-copy";
 import getUser from "@/db/get-user";
 import { NextApiRequest, NextApiResponse } from "next";
+import YandexProvider from "next-auth/providers/yandex";
+import handleCopy from "./handle-user-copy";
+import removeCookies from "./remove-cookies";
 
 export default function customYandexProvider(
   req: NextApiRequest,
@@ -28,8 +28,8 @@ export default function customYandexProvider(
         user,
         { name: "yandex", id: profile.id },
         {
-          name: profile.display_name,
-          email: profile.default_email,
+          name: profile.display_name!,
+          email: profile.default_email!,
           image: image_url || "",
         }
       );
